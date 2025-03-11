@@ -128,27 +128,27 @@ export default function FAQPage() {
           <div className="flex gap-2 items-center text-xl font-bold">
             <Link href="/" className="flex items-center gap-2">
               <Shield className="h-6 w-6" />
-              <span>SafeSense</span>
+              <span className="hidden sm:inline">SafeSense</span>
             </Link>
           </div>
           <div className="flex flex-1 items-center justify-end space-x-4">
             <nav className="flex items-center space-x-1">
-              <Link href="/features" className="px-3 py-2 text-sm font-medium">
+              <Link href="/features" className="hidden sm:inline px-3 py-2 text-sm font-medium">
                 Features
               </Link>
-              <Link href="/insurance" className="px-3 py-2 text-sm font-medium">
+              <Link href="/insurance" className="hidden sm:inline px-3 py-2 text-sm font-medium">
                 Insurance
               </Link>
-              <Link href="/pricing" className="px-3 py-2 text-sm font-medium">
+              <Link href="/pricing" className="hidden sm:inline px-3 py-2 text-sm font-medium">
                 Pricing
               </Link>
-              <Link href="/faq" className="px-3 py-2 text-sm font-medium text-primary">
+              <Link href="/faq" className="hidden sm:inline px-3 py-2 text-sm font-medium text-primary">
                 FAQ
               </Link>
-              <Link href="/#contact" className="px-3 py-2 text-sm font-medium">
+              <Link href="/#contact" className="hidden sm:inline px-3 py-2 text-sm font-medium">
                 Contact
               </Link>
-              <Button asChild>
+              <Button asChild size="sm">
                 <Link href="/get-coverage">Get Started</Link>
               </Button>
             </nav>
@@ -188,12 +188,12 @@ export default function FAQPage() {
         <section className="w-full py-12 md:py-24 lg:py-32">
           <div className="container px-4 md:px-6">
             <Tabs defaultValue="general" className="w-full max-w-4xl mx-auto">
-              <TabsList className="grid w-full grid-cols-2 md:grid-cols-5">
-                <TabsTrigger value="general">General</TabsTrigger>
-                <TabsTrigger value="blockchain">Blockchain</TabsTrigger>
-                <TabsTrigger value="coverage">Coverage</TabsTrigger>
-                <TabsTrigger value="claims">Claims</TabsTrigger>
-                <TabsTrigger value="payments">Payments</TabsTrigger>
+              <TabsList className="flex flex-col sm:flex-row gap-2 w-full">
+                <TabsTrigger value="general" className="w-full sm:w-auto">General</TabsTrigger>
+                <TabsTrigger value="blockchain" className="w-full sm:w-auto">Blockchain</TabsTrigger>
+                <TabsTrigger value="coverage" className="w-full sm:w-auto">Coverage</TabsTrigger>
+                <TabsTrigger value="claims" className="w-full sm:w-auto">Claims</TabsTrigger>
+                <TabsTrigger value="payments" className="w-full sm:w-auto">Payments</TabsTrigger>
               </TabsList>
 
               {Object.entries(faqCategories).map(([category, items]) => (
@@ -218,20 +218,20 @@ export default function FAQPage() {
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center text-center space-y-4">
               <div className="space-y-2">
-                <h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight">Still Have Questions?</h2>
-                <p className="max-w-[800px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+                <h2 className="text-2xl sm:text-3xl font-bold tracking-tighter md:text-4xl/tight">Still Have Questions?</h2>
+                <p className="max-w-[800px] text-muted-foreground text-sm sm:text-base md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
                   Our team is here to help you find the answers you need
                 </p>
               </div>
-              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 max-w-4xl mt-8">
-                <div className="flex flex-col items-center text-center p-6 rounded-lg border bg-background">
-                  <Mail className="h-10 w-10 text-primary mb-4" />
-                  <h3 className="text-xl font-bold mb-2">Email Support</h3>
-                  <p className="text-muted-foreground mb-4">
+              <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 max-w-4xl mt-8">
+                <div className="flex flex-col items-center text-center p-4 sm:p-6 rounded-lg border bg-background">
+                  <Mail className="h-8 w-8 sm:h-10 sm:w-10 text-primary mb-4" />
+                  <h3 className="text-lg sm:text-xl font-bold mb-2">Email Support</h3>
+                  <p className="text-muted-foreground text-sm sm:text-base mb-4">
                     Send us a message and we'll get back to you within 24 hours
                   </p>
-                  <Button variant="outline" asChild>
-                    <Link href="mailto:support@safesense.com">support@safesense.com</Link>
+                  <Button variant="outline" size="sm" asChild>
+                    <Link href="mailto:support@safesense.com">Email Us</Link>
                   </Button>
                 </div>
 

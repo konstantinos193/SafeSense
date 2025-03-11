@@ -50,21 +50,21 @@ export default function GetCoverage() {
         </div>
       </header>
 
-      <main className="flex-1 py-12 md:py-16 lg:py-20">
-        <div className="container px-4 md:px-6">
+      <main className="flex-1 py-8 md:py-16 lg:py-20">
+        <div className="container px-2 md:px-6">
           <div className="mx-auto max-w-3xl">
-            <div className="mb-8">
-              <h1 className="text-3xl font-bold tracking-tight">Get Coverage</h1>
-              <p className="text-muted-foreground mt-2">Complete the steps below to get your insurance quote</p>
+            <div className="mb-6">
+              <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">Get Coverage</h1>
+              <p className="text-muted-foreground mt-1 text-sm sm:text-base">Complete the steps below to get your insurance quote</p>
             </div>
 
             {/* Progress Bar */}
-            <div className="mb-10">
-              <div className="flex justify-between mb-2">
+            <div className="mb-6 sm:mb-10">
+              <div className="flex justify-between mb-1 sm:mb-2">
                 {Array.from({ length: totalSteps }).map((_, index) => (
                   <div key={index} className="flex flex-col items-center">
                     <div
-                      className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                      className={`w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center ${
                         step > index + 1
                           ? "bg-primary text-primary-foreground"
                           : step === index + 1
@@ -72,9 +72,9 @@ export default function GetCoverage() {
                             : "bg-muted text-muted-foreground"
                       }`}
                     >
-                      {step > index + 1 ? <Check className="h-4 w-4" /> : index + 1}
+                      {step > index + 1 ? <Check className="h-3 w-3 sm:h-4 sm:w-4" /> : index + 1}
                     </div>
-                    <span className="text-xs mt-1 hidden md:block">
+                    <span className="text-[10px] sm:text-xs mt-1 hidden md:block">
                       {index === 0
                         ? "Insurance Type"
                         : index === 1
@@ -98,14 +98,14 @@ export default function GetCoverage() {
             {step === 1 && (
               <Card>
                 <CardHeader>
-                  <CardTitle>Select Insurance Type</CardTitle>
-                  <CardDescription>Choose the type of insurance coverage you need</CardDescription>
+                  <CardTitle className="text-xl sm:text-2xl">Select Insurance Type</CardTitle>
+                  <CardDescription className="text-sm sm:text-base">Choose the type of insurance coverage you need</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <RadioGroup
                     value={insuranceType}
                     onValueChange={setInsuranceType}
-                    className="grid gap-4 md:grid-cols-2"
+                    className="grid gap-2 sm:gap-4 md:grid-cols-2"
                   >
                     <InsuranceOption
                       value="crypto"
@@ -160,10 +160,10 @@ export default function GetCoverage() {
             {step === 2 && (
               <Card>
                 <CardHeader>
-                  <CardTitle>Coverage Details</CardTitle>
-                  <CardDescription>Tell us more about what you want to insure</CardDescription>
+                  <CardTitle className="text-xl sm:text-2xl">Coverage Details</CardTitle>
+                  <CardDescription className="text-sm sm:text-base">Tell us more about what you want to insure</CardDescription>
                 </CardHeader>
-                <CardContent className="space-y-6">
+                <CardContent className="space-y-4 sm:space-y-6">
                   {insuranceType === "crypto" && (
                     <>
                       <div className="space-y-2">
@@ -313,11 +313,11 @@ export default function GetCoverage() {
             {step === 3 && (
               <Card>
                 <CardHeader>
-                  <CardTitle>Personal Information</CardTitle>
-                  <CardDescription>Tell us a bit about yourself</CardDescription>
+                  <CardTitle className="text-xl sm:text-2xl">Personal Information</CardTitle>
+                  <CardDescription className="text-sm sm:text-base">Tell us a bit about yourself</CardDescription>
                 </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="grid grid-cols-2 gap-4">
+                <CardContent className="space-y-3 sm:space-y-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                     <div className="space-y-2">
                       <Label htmlFor="first-name">First Name</Label>
                       <Input id="first-name" />
@@ -364,12 +364,12 @@ export default function GetCoverage() {
             {step === 4 && (
               <Card>
                 <CardHeader>
-                  <CardTitle>Your Insurance Quote</CardTitle>
-                  <CardDescription>Review your information and get your personalized quote</CardDescription>
+                  <CardTitle className="text-xl sm:text-2xl">Your Insurance Quote</CardTitle>
+                  <CardDescription className="text-sm sm:text-base">Review your information and get your personalized quote</CardDescription>
                 </CardHeader>
-                <CardContent className="space-y-6">
-                  <div className="rounded-lg border bg-muted/50 p-4">
-                    <div className="grid gap-3">
+                <CardContent className="space-y-4 sm:space-y-6">
+                  <div className="rounded-lg border bg-muted/50 p-3 sm:p-4">
+                    <div className="grid gap-2 sm:gap-3">
                       <div className="flex justify-between">
                         <span className="text-muted-foreground">Insurance Type:</span>
                         <span className="font-medium">

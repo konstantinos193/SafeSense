@@ -256,7 +256,7 @@ export default function ProfilePage() {
   return (
     <div className="flex min-h-screen flex-col">
       <header className="sticky top-0 z-40 w-full border-b bg-background">
-        <div className="container flex h-16 items-center space-x-4 sm:justify-between sm:space-x-0">
+        <div className="container flex h-16 items-center space-x-4 sm:justify-between sm:space-x-0 px-4">
           <div className="flex gap-2 items-center text-xl font-bold">
             <Link href="/" className="flex items-center gap-2">
               <Shield className="h-6 w-6" />
@@ -277,12 +277,12 @@ export default function ProfilePage() {
         </div>
       </header>
 
-      <main className="flex-1 py-12 md:py-16 lg:py-20">
-        <div className="container px-4 md:px-6">
+      <main className="flex-1 py-8 md:py-16 lg:py-20">
+        <div className="container px-4">
           <div className="mx-auto max-w-4xl space-y-8">
             <div className="space-y-2">
-              <h1 className="text-3xl font-bold">My Profile</h1>
-              <p className="text-muted-foreground">Manage your account information and settings</p>
+              <h1 className="text-2xl md:text-3xl font-bold">My Profile</h1>
+              <p className="text-sm md:text-base text-muted-foreground">Manage your account information and settings</p>
             </div>
 
             {error && (
@@ -301,8 +301,8 @@ export default function ProfilePage() {
               </Alert>
             )}
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <div className="md:col-span-1">
+            <div className="grid grid-cols-1 gap-8">
+              <div>
                 <Card>
                   <CardContent className="pt-6">
                     <div className="flex flex-col items-center space-y-4">
@@ -380,22 +380,22 @@ export default function ProfilePage() {
                 </Card>
               </div>
 
-              <div className="md:col-span-2">
+              <div>
                 <div className="w-full">
-                  <div className="flex space-x-2 mb-6">
+                  <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2 mb-6">
                     <Button 
                       variant={activeTab === "profile" ? "default" : "outline"}
-                      className="flex-1"
+                      className="w-full md:flex-1"
                       onClick={() => setActiveTab("profile")}
                     >
-                      Profile Information
+                      Profile
                     </Button>
                     <Button 
                       variant={activeTab === "kyc" ? "default" : "outline"}
-                      className="flex-1"
+                      className="w-full md:flex-1"
                       onClick={() => setActiveTab("kyc")}
                     >
-                      KYC Verification
+                      KYC
                     </Button>
                   </div>
 
@@ -422,7 +422,7 @@ export default function ProfilePage() {
                           </div>
                         )}
                         
-                        <div className="grid grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div className="space-y-2">
                             <Label htmlFor="firstName">First Name</Label>
                             {isEditing ? (

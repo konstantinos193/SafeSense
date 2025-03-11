@@ -140,14 +140,14 @@ export default function InsurancePage() {
     <div className="flex min-h-screen flex-col">
       <header className="sticky top-0 z-40 w-full border-b bg-background">
         <div className="container flex h-16 items-center space-x-4 sm:justify-between sm:space-x-0">
-          <div className="flex gap-2 items-center text-xl font-bold">
+          <div className="flex gap-2 items-center text-lg md:text-xl font-bold">
             <Link href="/" className="flex items-center gap-2">
-              <Shield className="h-6 w-6" />
+              <Shield className="h-5 w-5 md:h-6 md:w-6" />
               <span>SafeSense</span>
             </Link>
           </div>
-          <div className="flex flex-1 items-center justify-end space-x-4">
-            <nav className="flex items-center space-x-1">
+          <div className="flex flex-1 items-center justify-end space-x-2 md:space-x-4">
+            <nav className="hidden sm:flex items-center space-x-1">
               <Link href="/features" className="px-3 py-2 text-sm font-medium">
                 Features
               </Link>
@@ -163,33 +163,33 @@ export default function InsurancePage() {
               <Link href="/#contact" className="px-3 py-2 text-sm font-medium">
                 Contact
               </Link>
-              <Button asChild>
-                <Link href="/get-coverage">Get Started</Link>
-              </Button>
             </nav>
+            <Button asChild size="sm" className="text-xs md:text-sm">
+              <Link href="/get-coverage">Get Started</Link>
+            </Button>
           </div>
         </div>
       </header>
 
       <main className="flex-1">
         {/* Hero Section */}
-        <section className="w-full py-12 md:py-24 lg:py-32 bg-gradient-to-b from-primary/20 to-background">
-          <div className="container px-4 md:px-6">
+        <section className="w-full py-8 md:py-12 lg:py-16 bg-gradient-to-b from-primary/20 to-background">
+          <div className="container px-2 sm:px-4 md:px-6">
             <div className="flex flex-col items-center text-center space-y-4">
               <div className="space-y-2">
-                <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl">
+                <h1 className="text-2xl font-bold tracking-tighter sm:text-3xl md:text-4xl lg:text-5xl">
                   Blockchain-Powered Insurance Solutions
                 </h1>
-                <p className="max-w-[800px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+                <p className="max-w-[800px] text-muted-foreground text-sm md:text-base lg:text-lg">
                   Comprehensive protection for traditional and digital assets with transparent policies and automatic
                   claims processing
                 </p>
               </div>
-              <div className="flex flex-col sm:flex-row gap-3 mt-6">
-                <Button size="lg" asChild>
+              <div className="flex flex-col sm:flex-row gap-2 mt-4">
+                <Button size="sm" asChild className="w-full sm:w-auto">
                   <Link href="/get-coverage">Get Coverage Now</Link>
                 </Button>
-                <Button size="lg" variant="outline" asChild>
+                <Button size="sm" variant="outline" asChild className="w-full sm:w-auto">
                   <Link href="/pricing">View Pricing</Link>
                 </Button>
               </div>
@@ -198,29 +198,31 @@ export default function InsurancePage() {
         </section>
 
         {/* Insurance Categories Section */}
-        <section className="w-full py-12 md:py-24 lg:py-32">
-          <div className="container px-4 md:px-6">
-            <div className="flex flex-col items-center justify-center space-y-4 text-center mb-8">
+        <section className="w-full py-8 md:py-12 lg:py-16">
+          <div className="container px-2 sm:px-4 md:px-6">
+            <div className="flex flex-col items-center justify-center space-y-4 text-center mb-6">
               <div className="space-y-2">
-                <h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight">Insurance Categories</h2>
-                <p className="max-w-[800px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+                <h2 className="text-2xl font-bold tracking-tighter md:text-3xl">Insurance Categories</h2>
+                <p className="max-w-[800px] text-muted-foreground text-sm md:text-base">
                   Explore our innovative blockchain-powered insurance categories
                 </p>
               </div>
             </div>
 
-            <div className="flex justify-center gap-4 mt-8 flex-wrap">
+            <div className="flex justify-center gap-2 mt-6 flex-wrap">
               <Button 
                 variant={selectedCategory === "crypto" ? "default" : "outline"}
                 onClick={() => setSelectedCategory("crypto")}
-                className="transition-all duration-200"
+                className="text-xs sm:text-sm"
+                size="sm"
               >
                 Crypto & Digital
               </Button>
               <Button 
                 variant={selectedCategory === "personal" ? "default" : "outline"}
                 onClick={() => setSelectedCategory("personal")}
-                className="transition-all duration-200"
+                className="text-xs sm:text-sm"
+                size="sm"
               >
                 Personal
               </Button>

@@ -235,27 +235,27 @@ export default function LoginPage() {
   return (
     <div className="flex min-h-screen flex-col">
       <header className="sticky top-0 z-40 w-full border-b bg-background">
-        <div className="container flex h-16 items-center space-x-4 sm:justify-between sm:space-x-0">
-          <div className="flex gap-2 items-center text-xl font-bold">
+        <div className="container flex h-16 items-center space-x-4 sm:justify-between sm:space-x-0 px-4">
+          <div className="flex gap-2 items-center text-lg md:text-xl font-bold">
             <Link href="/" className="flex items-center gap-2">
-              <Shield className="h-6 w-6" />
+              <Shield className="h-5 w-5 md:h-6 md:w-6" />
               <span>SafeSense</span>
             </Link>
           </div>
           <div className="flex flex-1 items-center justify-end space-x-4">
-            <Link href="/auth/register" className="text-sm text-muted-foreground hover:underline">
+            <Link href="/auth/register" className="text-xs sm:text-sm text-muted-foreground hover:underline">
               Don't have an account? Sign up
             </Link>
           </div>
         </div>
       </header>
 
-      <main className="flex-1 py-12 md:py-16 lg:py-20">
-        <div className="container px-4 md:px-6">
-          <div className="mx-auto max-w-md space-y-6">
+      <main className="flex-1 py-8 md:py-12 lg:py-16">
+        <div className="container px-4">
+          <div className="mx-auto max-w-md space-y-4">
             <div className="space-y-2 text-center">
-              <h1 className="text-3xl font-bold">Sign In</h1>
-              <p className="text-muted-foreground">Choose how you want to sign in to SafeSense</p>
+              <h1 className="text-2xl sm:text-3xl font-bold">Sign In</h1>
+              <p className="text-sm sm:text-base text-muted-foreground">Choose how you want to sign in to SafeSense</p>
             </div>
 
             {error && (
@@ -275,21 +275,21 @@ export default function LoginPage() {
             )}
 
             <div className="w-full">
-              <div className="flex space-x-2 mb-6">
+              <div className="flex space-x-2 mb-4">
                 <Button 
                   variant={activeTab === "email" ? "default" : "outline"}
-                  className="flex-1"
+                  className="flex-1 text-xs sm:text-sm"
                   onClick={() => setActiveTab("email")}
                 >
-                  <Mail className="mr-2 h-4 w-4" />
+                  <Mail className="mr-2 h-3 w-3 sm:h-4 sm:w-4" />
                   Email
                 </Button>
                 <Button 
                   variant={activeTab === "wallet" ? "default" : "outline"}
-                  className="flex-1"
+                  className="flex-1 text-xs sm:text-sm"
                   onClick={() => setActiveTab("wallet")}
                 >
-                  <Wallet className="mr-2 h-4 w-4" />
+                  <Wallet className="mr-2 h-3 w-3 sm:h-4 sm:w-4" />
                   Wallet
                 </Button>
               </div>

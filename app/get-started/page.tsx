@@ -33,35 +33,35 @@ export default function GetStartedPage() {
     <div className="flex min-h-screen flex-col">
       <header className="sticky top-0 z-40 w-full border-b bg-background">
         <div className="container flex h-16 items-center space-x-4 sm:justify-between sm:space-x-0">
-          <div className="flex gap-2 items-center text-xl font-bold">
+          <div className="flex gap-2 items-center text-lg md:text-xl font-bold">
             <Link href="/" className="flex items-center gap-2">
-              <Shield className="h-6 w-6" />
+              <Shield className="h-5 w-5 md:h-6 md:w-6" />
               <span>SafeSense</span>
             </Link>
           </div>
           <div className="flex flex-1 items-center justify-end space-x-4">
-            <Link href="/" className="text-sm text-muted-foreground hover:underline">
+            <Link href="/" className="text-xs md:text-sm text-muted-foreground hover:underline">
               Back to Home
             </Link>
           </div>
         </div>
       </header>
       
-      <main className="flex-1 py-12 md:py-16 lg:py-20">
-        <div className="container px-4 md:px-6">
+      <main className="flex-1 py-8 md:py-12 lg:py-16">
+        <div className="container px-2 sm:px-4 md:px-6">
           <div className="mx-auto max-w-3xl">
-            <div className="mb-8">
-              <h1 className="text-3xl font-bold tracking-tight">Get Started with SafeSense</h1>
-              <p className="text-muted-foreground mt-2">Select your plan and complete your subscription</p>
+            <div className="mb-6 md:mb-8">
+              <h1 className="text-2xl md:text-3xl font-bold tracking-tight">Get Started with SafeSense</h1>
+              <p className="text-muted-foreground mt-1 md:mt-2 text-sm md:text-base">Select your plan and complete your subscription</p>
             </div>
             
             {/* Progress Bar */}
-            <div className="mb-10">
+            <div className="mb-8 md:mb-10">
               <div className="flex justify-between mb-2">
                 {Array.from({ length: totalSteps }).map((_, index) => (
                   <div key={index} className="flex flex-col items-center">
                     <div 
-                      className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                      className={`w-6 h-6 md:w-8 md:h-8 rounded-full flex items-center justify-center ${
                         step > index + 1 
                           ? "bg-primary text-primary-foreground" 
                           : step === index + 1 
@@ -69,9 +69,9 @@ export default function GetStartedPage() {
                             : "bg-muted text-muted-foreground"
                       }`}
                     >
-                      {step > index + 1 ? <Check className="h-4 w-4" /> : index + 1}
+                      {step > index + 1 ? <Check className="h-3 w-3 md:h-4 md:w-4" /> : index + 1}
                     </div>
-                    <span className="text-xs mt-1 hidden md:block">
+                    <span className="text-xs mt-1 hidden sm:block">
                       {index === 0 ? "Select Plan" : 
                        index === 1 ? "Account Details" : 
                        "Payment"}
@@ -79,7 +79,7 @@ export default function GetStartedPage() {
                   </div>
                 ))}
               </div>
-              <div className="w-full bg-muted h-2 rounded-full overflow-hidden">
+              <div className="w-full bg-muted h-1.5 md:h-2 rounded-full overflow-hidden">
                 <div 
                   className="bg-primary h-full transition-all duration-300 ease-in-out" 
                   style={{ width: `${(step / totalSteps) * 100}%` }}
@@ -92,126 +92,126 @@ export default function GetStartedPage() {
               <Card>
                 <CardHeader>
                   <CardTitle>Choose Your Plan</CardTitle>
-                  <CardDescription>Select the plan that best fits your needs</CardDescription>
+                  <CardDescription className="text-sm md:text-base">Select the plan that best fits your needs</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <RadioGroup 
                     value={selectedPlan} 
                     onValueChange={setSelectedPlan}
-                    className="grid gap-4"
+                    className="grid gap-3 md:gap-4"
                   >
-                    <div className={`relative rounded-lg border-2 p-4 ${selectedPlan === "basic" ? "border-primary" : "border-muted"}`}>
-                      <RadioGroupItem value="basic" id="basic" className="absolute right-4 top-4 sr-only" />
-                      <Label htmlFor="basic" className="flex justify-between cursor-pointer">
+                    <div className={`relative rounded-lg border-2 p-3 md:p-4 ${selectedPlan === "basic" ? "border-primary" : "border-muted"}`}>
+                      <RadioGroupItem value="basic" id="basic" className="absolute right-3 top-3 md:right-4 md:top-4 sr-only" />
+                      <Label htmlFor="basic" className="flex flex-col md:flex-row md:justify-between gap-2 cursor-pointer">
                         <div>
                           <div className="flex items-center gap-2">
-                            <Shield className="h-5 w-5 text-primary" />
-                            <span className="font-bold text-lg">Basic Plan</span>
+                            <Shield className="h-4 w-4 md:h-5 md:w-5 text-primary" />
+                            <span className="font-bold text-base md:text-lg">Basic Plan</span>
                           </div>
-                          <p className="text-muted-foreground mt-1">For individual coverage</p>
-                          <ul className="mt-4 space-y-2 text-sm">
+                          <p className="text-muted-foreground mt-1 text-sm">For individual coverage</p>
+                          <ul className="mt-2 md:mt-4 space-y-1 md:space-y-2 text-xs md:text-sm">
                             <li className="flex items-center">
-                              <Check className="mr-2 h-4 w-4 text-primary" />
+                              <Check className="mr-1 md:mr-2 h-3 w-3 md:h-4 md:w-4 text-primary" />
                               Single insurance category
                             </li>
                             <li className="flex items-center">
-                              <Check className="mr-2 h-4 w-4 text-primary" />
+                              <Check className="mr-1 md:mr-2 h-3 w-3 md:h-4 md:w-4 text-primary" />
                               Up to $10,000 coverage
                             </li>
                             <li className="flex items-center">
-                              <Check className="mr-2 h-4 w-4 text-primary" />
+                              <Check className="mr-1 md:mr-2 h-3 w-3 md:h-4 md:w-4 text-primary" />
                               24/7 monitoring
                             </li>
                           </ul>
                         </div>
-                        <div className="text-right">
-                          <div className="text-2xl font-bold">$29</div>
-                          <div className="text-sm text-muted-foreground">per month</div>
+                        <div className="md:text-right">
+                          <div className="text-xl md:text-2xl font-bold">$29</div>
+                          <div className="text-xs md:text-sm text-muted-foreground">per month</div>
                         </div>
                       </Label>
                     </div>
                     
-                    <div className={`relative rounded-lg border-2 p-4 ${selectedPlan === "premium" ? "border-primary" : "border-muted"}`}>
-                      <RadioGroupItem value="premium" id="premium" className="absolute right-4 top-4 sr-only" />
-                      <Label htmlFor="premium" className="flex justify-between cursor-pointer">
+                    <div className={`relative rounded-lg border-2 p-3 md:p-4 ${selectedPlan === "premium" ? "border-primary" : "border-muted"}`}>
+                      <RadioGroupItem value="premium" id="premium" className="absolute right-3 top-3 md:right-4 md:top-4 sr-only" />
+                      <Label htmlFor="premium" className="flex flex-col md:flex-row md:justify-between gap-2 cursor-pointer">
                         <div>
                           <div className="flex items-center gap-2">
-                            <Shield className="h-5 w-5 text-primary" />
-                            <span className="font-bold text-lg">Premium Plan</span>
+                            <Shield className="h-4 w-4 md:h-5 md:w-5 text-primary" />
+                            <span className="font-bold text-base md:text-lg">Premium Plan</span>
                             <span className="bg-primary/10 text-primary text-xs px-2 py-0.5 rounded-full">Popular</span>
                           </div>
-                          <p className="text-muted-foreground mt-1">For multiple assets</p>
-                          <ul className="mt-4 space-y-2 text-sm">
+                          <p className="text-muted-foreground mt-1 text-sm">For multiple assets</p>
+                          <ul className="mt-2 md:mt-4 space-y-1 md:space-y-2 text-xs md:text-sm">
                             <li className="flex items-center">
-                              <Check className="mr-2 h-4 w-4 text-primary" />
+                              <Check className="mr-1 md:mr-2 h-3 w-3 md:h-4 md:w-4 text-primary" />
                               Up to 3 insurance categories
                             </li>
                             <li className="flex items-center">
-                              <Check className="mr-2 h-4 w-4 text-primary" />
+                              <Check className="mr-1 md:mr-2 h-3 w-3 md:h-4 md:w-4 text-primary" />
                               Up to $100,000 coverage
                             </li>
                             <li className="flex items-center">
-                              <Check className="mr-2 h-4 w-4 text-primary" />
+                              <Check className="mr-1 md:mr-2 h-3 w-3 md:h-4 md:w-4 text-primary" />
                               Smart contract integration
                             </li>
                             <li className="flex items-center">
-                              <Check className="mr-2 h-4 w-4 text-primary" />
+                              <Check className="mr-1 md:mr-2 h-3 w-3 md:h-4 md:w-4 text-primary" />
                               Priority claims processing
                             </li>
                           </ul>
                         </div>
-                        <div className="text-right">
-                          <div className="text-2xl font-bold">$99</div>
-                          <div className="text-sm text-muted-foreground">per month</div>
+                        <div className="md:text-right">
+                          <div className="text-xl md:text-2xl font-bold">$99</div>
+                          <div className="text-xs md:text-sm text-muted-foreground">per month</div>
                         </div>
                       </Label>
                     </div>
                     
-                    <div className="relative rounded-lg border-2 border-muted p-4 bg-muted/10">
+                    <div className="relative rounded-lg border-2 border-muted p-3 md:p-4 bg-muted/10">
                       <div className="flex justify-between">
                         <div>
                           <div className="flex items-center gap-2">
-                            <Shield className="h-5 w-5 text-muted-foreground" />
-                            <span className="font-bold text-lg">Enterprise Plan</span>
+                            <Shield className="h-4 w-4 text-muted-foreground" />
+                            <span className="font-bold text-base md:text-lg">Enterprise Plan</span>
                           </div>
-                          <p className="text-muted-foreground mt-1">For businesses & institutions</p>
-                          <div className="mt-4">
+                          <p className="text-muted-foreground mt-1 text-sm">For businesses & institutions</p>
+                          <div className="mt-2 md:mt-4">
                             <Button variant="outline" size="sm" asChild>
                               <Link href="/pricing/contact-sales">Contact Sales</Link>
                             </Button>
                           </div>
                         </div>
                         <div className="text-right">
-                          <div className="text-xl font-bold">Custom</div>
-                          <div className="text-sm text-muted-foreground">pricing</div>
+                          <div className="text-xl md:text-2xl font-bold">Custom</div>
+                          <div className="text-xs md:text-sm text-muted-foreground">pricing</div>
                         </div>
                       </div>
                     </div>
                   </RadioGroup>
                   
-                  <div className="mt-6 p-4 bg-muted/30 rounded-lg">
-                    <h3 className="font-medium mb-2">Plan Summary</h3>
-                    <div className="flex justify-between mb-2">
+                  <div className="mt-4 md:mt-6 p-3 md:p-4 bg-muted/30 rounded-lg">
+                    <h3 className="font-medium mb-1 md:mb-2 text-sm md:text-base">Plan Summary</h3>
+                    <div className="flex justify-between mb-1 md:mb-2 text-sm">
                       <span>Plan:</span>
                       <span className="font-medium">{selectedPlan === "basic" ? "Basic" : "Premium"}</span>
                     </div>
-                    <div className="flex justify-between mb-2">
+                    <div className="flex justify-between mb-1 md:mb-2 text-sm">
                       <span>Billing:</span>
                       <span className="font-medium">Monthly</span>
                     </div>
-                    <div className="flex justify-between font-medium">
+                    <div className="flex justify-between font-medium text-sm md:text-base">
                       <span>Total:</span>
                       <span>${selectedPlan === "basic" ? "29" : "99"}/month</span>
                     </div>
                   </div>
                 </CardContent>
-                <CardFooter className="flex justify-between">
-                  <Button variant="outline" onClick={prevStep} disabled={step === 1} asChild>
+                <CardFooter className="flex flex-col md:flex-row gap-2 md:gap-0 justify-between">
+                  <Button variant="outline" onClick={prevStep} disabled={step === 1} asChild className="w-full md:w-auto">
                     <Link href="/#pricing">
                       <ArrowLeft className="mr-2 h-4 w-4" /> Back to Pricing
                     </Link>
                   </Button>
-                  <Button onClick={nextStep}>
+                  <Button onClick={nextStep} className="w-full md:w-auto">
                     Continue <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
                 </CardFooter>
@@ -394,14 +394,14 @@ export default function GetStartedPage() {
         </div>
       </main>
       
-      <footer className="border-t py-6">
-        <div className="container px-4 md:px-6">
-          <div className="flex flex-col items-center justify-center gap-4 md:flex-row md:justify-between">
-            <div className="flex gap-2 items-center text-lg font-bold">
-              <Shield className="h-5 w-5" />
+      <footer className="border-t py-4 md:py-6">
+        <div className="container px-2 sm:px-4 md:px-6">
+          <div className="flex flex-col items-center justify-center gap-2 md:gap-4 md:flex-row md:justify-between">
+            <div className="flex gap-2 items-center text-base md:text-lg font-bold">
+              <Shield className="h-4 w-4 md:h-5 md:w-5" />
               <span>SafeSense</span>
             </div>
-            <p className="text-center text-sm text-muted-foreground md:text-left">
+            <p className="text-center text-xs md:text-sm text-muted-foreground md:text-left">
               © 2025 SafeSense. All rights reserved.
             </p>
           </div>

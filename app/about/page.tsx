@@ -1,44 +1,111 @@
+"use client"
+
 import Link from "next/link"
-import { Shield, Lock, BarChart3, Users, Check, Zap, Globe, Sparkles } from "lucide-react"
+import { Shield, Lock, BarChart3, Users, Check, Zap, Globe, Sparkles, Menu, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { useState } from "react"
 
 export default function AboutPage() {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [activeTab, setActiveTab] = useState("smart-contracts")
+
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className={`flex min-h-screen flex-col ${isMobileMenuOpen ? 'overflow-hidden' : ''}`}>
       <header className="sticky top-0 z-40 w-full border-b bg-background">
-        <div className="container flex h-16 items-center space-x-4 sm:justify-between sm:space-x-0">
+        <div className="container flex h-16 items-center justify-between px-4">
           <div className="flex gap-2 items-center text-xl font-bold">
             <Link href="/" className="flex items-center gap-2">
               <Shield className="h-6 w-6" />
               <span>SafeSense</span>
             </Link>
           </div>
-          <div className="flex flex-1 items-center justify-end space-x-4">
-            <nav className="flex items-center space-x-1">
-              <Link href="/#features" className="px-3 py-2 text-sm font-medium">
+          <div className="block md:hidden">
+            <Button variant="ghost" size="sm" className="px-2" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+              {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            </Button>
+          </div>
+          <nav className="hidden md:flex items-center space-x-4">
+            <Link href="/#features" className="text-sm font-medium">
+              Features
+            </Link>
+            <Link href="/#insurance-categories" className="text-sm font-medium">
+              Insurance
+            </Link>
+            <Link href="/#pricing" className="text-sm font-medium">
+              Pricing
+            </Link>
+            <Link href="/#faq" className="text-sm font-medium">
+              FAQ
+            </Link>
+            <Link href="/#contact" className="text-sm font-medium">
+              Contact
+            </Link>
+            <Button asChild>
+              <Link href="/get-coverage">Get Started</Link>
+            </Button>
+          </nav>
+        </div>
+      </header>
+
+      {isMobileMenuOpen && (
+        <div className="fixed inset-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 md:hidden">
+          <div className="container flex flex-col space-y-4 p-6">
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="self-end px-2"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              <X className="h-5 w-5" />
+            </Button>
+            
+            <nav className="flex flex-col space-y-2">
+              <Link 
+                href="/#features" 
+                className="text-sm font-medium py-2"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
                 Features
               </Link>
-              <Link href="/#insurance-categories" className="px-3 py-2 text-sm font-medium">
+              <Link 
+                href="/#insurance-categories" 
+                className="text-sm font-medium py-2"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
                 Insurance
               </Link>
-              <Link href="/#pricing" className="px-3 py-2 text-sm font-medium">
+              <Link 
+                href="/#pricing" 
+                className="text-sm font-medium py-2"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
                 Pricing
               </Link>
-              <Link href="/#faq" className="px-3 py-2 text-sm font-medium">
+              <Link 
+                href="/#faq" 
+                className="text-sm font-medium py-2"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
                 FAQ
               </Link>
-              <Link href="/#contact" className="px-3 py-2 text-sm font-medium">
+              <Link 
+                href="/#contact" 
+                className="text-sm font-medium py-2"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
                 Contact
               </Link>
-              <Button asChild>
-                <Link href="/get-coverage">Get Started</Link>
+              <Button asChild className="mt-4">
+                <Link href="/get-coverage" onClick={() => setIsMobileMenuOpen(false)}>
+                  Get Started
+                </Link>
               </Button>
             </nav>
           </div>
         </div>
-      </header>
+      )}
 
       <main className="flex-1">
         {/* Hero Section */}
@@ -122,14 +189,33 @@ export default function AboutPage() {
               </div>
             </div>
 
-            <Tabs defaultValue="smart-contracts" className="w-full max-w-4xl mx-auto">
-              <TabsList className="grid w-full grid-cols-3">
-                <TabsTrigger value="smart-contracts">Smart Contracts</TabsTrigger>
-                <TabsTrigger value="data-oracles">Data Oracles</TabsTrigger>
-                <TabsTrigger value="defi-integration">DeFi Integration</TabsTrigger>
-              </TabsList>
+            <div className="w-full max-w-4xl mx-auto">
+              <div className="flex space-x-2 mb-6">
+                <Button 
+                  variant={activeTab === "smart-contracts" ? "default" : "outline"}
+                  className="flex-1"
+                  onClick={() => setActiveTab("smart-contracts")}
+                >
+                  Smart Contracts
+                </Button>
+                <Button 
+                  variant={activeTab === "data-oracles" ? "default" : "outline"}
+                  className="flex-1"
+                  onClick={() => setActiveTab("data-oracles")}
+                >
+                  Data Oracles
+                </Button>
+                <Button 
+                  variant={activeTab === "defi-integration" ? "default" : "outline"}
+                  className="flex-1"
+                  onClick={() => setActiveTab("defi-integration")}
+                >
+                  DeFi Integration
+                </Button>
+              </div>
 
-              <TabsContent value="smart-contracts" className="mt-6">
+              {/* Smart Contracts Content */}
+              {activeTab === "smart-contracts" && (
                 <Card>
                   <CardHeader>
                     <CardTitle>Smart Contract Policies</CardTitle>
@@ -192,9 +278,10 @@ export default function AboutPage() {
                     </div>
                   </CardContent>
                 </Card>
-              </TabsContent>
+              )}
 
-              <TabsContent value="data-oracles" className="mt-6">
+              {/* Data Oracles Content */}
+              {activeTab === "data-oracles" && (
                 <Card>
                   <CardHeader>
                     <CardTitle>Real-World Data Oracles</CardTitle>
@@ -256,9 +343,10 @@ export default function AboutPage() {
                     </div>
                   </CardContent>
                 </Card>
-              </TabsContent>
+              )}
 
-              <TabsContent value="defi-integration" className="mt-6">
+              {/* DeFi Integration Content */}
+              {activeTab === "defi-integration" && (
                 <Card>
                   <CardHeader>
                     <CardTitle>DeFi Integration</CardTitle>
@@ -317,8 +405,8 @@ export default function AboutPage() {
                     </div>
                   </CardContent>
                 </Card>
-              </TabsContent>
-            </Tabs>
+              )}
+            </div>
           </div>
         </section>
 
@@ -459,7 +547,7 @@ export default function AboutPage() {
               </div>
             </div>
 
-            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
               <div className="flex flex-col items-center text-center">
                 <div className="h-40 w-40 rounded-full bg-muted mb-4 overflow-hidden">
                   <img
@@ -523,7 +611,7 @@ export default function AboutPage() {
                   insurance.
                 </p>
               </div>
-              <div className="flex flex-col sm:flex-row gap-3 mt-6">
+              <div className="flex flex-col sm:flex-row gap-3">
                 <Button size="lg" asChild>
                   <Link href="/get-coverage">Get Coverage Now</Link>
                 </Button>
@@ -536,22 +624,24 @@ export default function AboutPage() {
         </section>
       </main>
 
-      <footer className="w-full border-t py-6 md:py-0">
-        <div className="container flex flex-col items-center justify-between gap-4 md:h-24 md:flex-row">
-          <div className="flex gap-2 items-center text-lg font-bold">
-            <Shield className="h-5 w-5" />
-            <span>SafeSense</span>
-          </div>
-          <p className="text-center text-sm leading-loose text-muted-foreground md:text-left">
-            © 2025 SafeSense. All rights reserved.
-          </p>
-          <div className="flex gap-4">
-            <Link href="#" className="text-sm text-muted-foreground underline-offset-4 hover:underline">
-              Terms
-            </Link>
-            <Link href="#" className="text-sm text-muted-foreground underline-offset-4 hover:underline">
-              Privacy
-            </Link>
+      <footer className="w-full border-t py-6">
+        <div className="container px-4">
+          <div className="flex flex-col items-center gap-4 md:h-24 md:flex-row md:justify-between">
+            <div className="flex gap-2 items-center text-lg font-bold">
+              <Shield className="h-5 w-5" />
+              <span>SafeSense</span>
+            </div>
+            <p className="text-center text-sm text-muted-foreground">
+              © 2025 SafeSense. All rights reserved.
+            </p>
+            <div className="flex gap-4">
+              <Link href="#" className="text-sm text-muted-foreground hover:underline">
+                Terms
+              </Link>
+              <Link href="#" className="text-sm text-muted-foreground hover:underline">
+                Privacy
+              </Link>
+            </div>
           </div>
         </div>
       </footer>

@@ -7,14 +7,14 @@ export default function TermsPage() {
   return (
     <div className="flex min-h-screen flex-col">
       <header className="sticky top-0 z-40 w-full border-b bg-background">
-        <div className="container flex h-16 items-center space-x-4 sm:justify-between sm:space-x-0">
+        <div className="container flex h-16 items-center space-x-4 sm:justify-between sm:space-x-0 px-4">
           <div className="flex gap-2 items-center text-xl font-bold">
             <Link href="/" className="flex items-center gap-2">
               <Shield className="h-6 w-6" />
               <span>SafeSense</span>
             </Link>
           </div>
-          <div className="flex flex-1 items-center justify-end space-x-4">
+          <div className="hidden md:flex flex-1 items-center justify-end space-x-4">
             <nav className="flex items-center space-x-1">
               <Link href="/features" className="px-3 py-2 text-sm font-medium">
                 Features
@@ -31,23 +31,25 @@ export default function TermsPage() {
               <Link href="/#contact" className="px-3 py-2 text-sm font-medium">
                 Contact
               </Link>
-              <Button asChild>
-                <Link href="/get-coverage">Get Started</Link>
-              </Button>
             </nav>
+          </div>
+          <div className="md:hidden">
+            <Button asChild>
+              <Link href="/get-coverage">Get Started</Link>
+            </Button>
           </div>
         </div>
       </header>
 
       <main className="flex-1">
-        <section className="w-full py-12 md:py-24 lg:py-32 bg-gradient-to-b from-primary/20 to-background">
-          <div className="container px-4 md:px-6">
+        <section className="w-full py-8 md:py-24 lg:py-32 bg-gradient-to-b from-primary/20 to-background">
+          <div className="container px-4">
             <div className="flex flex-col items-center text-center space-y-4">
               <div className="space-y-2">
-                <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
+                <h1 className="text-2xl font-bold tracking-tighter sm:text-3xl md:text-4xl">
                   Terms of Service
                 </h1>
-                <p className="max-w-[800px] text-muted-foreground md:text-xl/relaxed">
+                <p className="text-sm md:text-base text-muted-foreground">
                   Last updated: March 1, 2025
                 </p>
               </div>
@@ -55,56 +57,115 @@ export default function TermsPage() {
           </div>
         </section>
 
-        <section className="w-full py-12 md:py-24">
-          <div className="container px-4 md:px-6">
-            <div className="flex flex-col md:flex-row gap-8">
-              <div className="md:w-1/4">
-                <div className="sticky top-24 p-6 bg-background rounded-lg border">
-                  <h3 className="text-lg font-semibold mb-4">Table of Contents</h3>
-                  <nav className="space-y-2">
-                    {[
-                      "Introduction",
-                      "Definitions",
-                      "Account Registration",
-                      "Services",
-                      "Payments",
-                      "Smart Contracts",
-                      "User Obligations",
-                      "Intellectual Property",
-                      "Disclaimers",
-                      "Limitation of Liability",
-                      "Indemnification",
-                      "Termination",
-                      "Governing Law",
-                      "Changes to Terms",
-                      "Contact Us"
-                    ].map((item, index) => (
-                      <a 
-                        key={index}
-                        href={`#${item.toLowerCase().replace(/ /g, '-')}`}
-                        className="block text-sm text-muted-foreground hover:text-primary transition-colors"
-                      >
-                        {`${index + 1}. ${item}`}
-                      </a>
-                    ))}
-                  </nav>
-                </div>
+        <section className="w-full py-8 md:py-24">
+          <div className="container px-4">
+            <div className="flex flex-col gap-8">
+              <div className="md:hidden">
+                <Tabs defaultValue="toc">
+                  <TabsList className="w-full">
+                    <TabsTrigger value="toc" className="flex-1">Contents</TabsTrigger>
+                    <TabsTrigger value="terms" className="flex-1">Terms</TabsTrigger>
+                  </TabsList>
+                  <TabsContent value="toc">
+                    <div className="p-4 bg-background rounded-lg border">
+                      <h3 className="text-lg font-semibold mb-4">Table of Contents</h3>
+                      <nav className="space-y-2">
+                        {[
+                          "Introduction",
+                          "Definitions",
+                          "Account Registration",
+                          "Services",
+                          "Payments",
+                          "Smart Contracts",
+                          "User Obligations",
+                          "Intellectual Property",
+                          "Disclaimers",
+                          "Limitation of Liability",
+                          "Indemnification",
+                          "Termination",
+                          "Governing Law",
+                          "Changes to Terms",
+                          "Contact Us"
+                        ].map((item, index) => (
+                          <a 
+                            key={index}
+                            href={`#${item.toLowerCase().replace(/ /g, '-')}`}
+                            className="block text-sm text-muted-foreground hover:text-primary transition-colors"
+                          >
+                            {`${index + 1}. ${item}`}
+                          </a>
+                        ))}
+                      </nav>
+                    </div>
+                  </TabsContent>
+                  <TabsContent value="terms">
+                    <div className="prose prose-sm max-w-none">
+                      {sections.map((section, index) => (
+                        <section 
+                          key={index}
+                          id={section.id}
+                          className="mb-6 p-4 bg-background rounded-lg border"
+                        >
+                          <h2 className="text-xl font-bold mb-3">
+                            {`${index + 1}. ${section.title}`}
+                          </h2>
+                          {section.content}
+                        </section>
+                      ))}
+                    </div>
+                  </TabsContent>
+                </Tabs>
               </div>
-              
-              <div className="md:w-3/4">
-                <div className="prose prose-lg max-w-none">
-                  {sections.map((section, index) => (
-                    <section 
-                      key={index}
-                      id={section.id}
-                      className="mb-12 p-6 bg-background rounded-lg border"
-                    >
-                      <h2 className="text-2xl font-bold mb-4">
-                        {`${index + 1}. ${section.title}`}
-                      </h2>
-                      {section.content}
-                  </section>
-                  ))}
+
+              <div className="hidden md:flex flex-col md:flex-row gap-8">
+                <div className="md:w-1/4">
+                  <div className="sticky top-24 p-6 bg-background rounded-lg border">
+                    <h3 className="text-lg font-semibold mb-4">Table of Contents</h3>
+                    <nav className="space-y-2">
+                      {[
+                        "Introduction",
+                        "Definitions",
+                        "Account Registration",
+                        "Services",
+                        "Payments",
+                        "Smart Contracts",
+                        "User Obligations",
+                        "Intellectual Property",
+                        "Disclaimers",
+                        "Limitation of Liability",
+                        "Indemnification",
+                        "Termination",
+                        "Governing Law",
+                        "Changes to Terms",
+                        "Contact Us"
+                      ].map((item, index) => (
+                        <a 
+                          key={index}
+                          href={`#${item.toLowerCase().replace(/ /g, '-')}`}
+                          className="block text-sm text-muted-foreground hover:text-primary transition-colors"
+                        >
+                          {`${index + 1}. ${item}`}
+                        </a>
+                      ))}
+                    </nav>
+                  </div>
+                </div>
+                
+                <div className="md:w-3/4">
+                  <div className="prose prose-lg max-w-none">
+                    {sections.map((section, index) => (
+                      <section 
+                        key={index}
+                        id={section.id}
+                        className="mb-12 p-6 bg-background rounded-lg border"
+                      >
+                        <h2 className="text-2xl font-bold mb-4">
+                          {`${index + 1}. ${section.title}`}
+                        </h2>
+                        {section.content}
+                      </section>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>

@@ -2,7 +2,7 @@
 
 import React, { useState } from "react"
 import Link from "next/link"
-import { Shield, Coins, Lock, BarChart3, Users, Mail, Car, Heart, Plane, Briefcase, Calendar, Home as HomeIcon } from "lucide-react"
+import { Shield, Coins, Lock, BarChart3, Users, Mail, Car, Heart, Plane, Briefcase, Calendar, Home as HomeIcon, Menu } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
@@ -11,6 +11,11 @@ import { ThemeToggle } from "@/components/theme-toggle"
 import { LanguageSelector } from "@/components/language-selector"
 import { useLanguage } from "@/components/language-provider"
 import { TranslatedText } from "@/components/translated-text"
+import {
+  Sheet,
+  SheetContent,
+  SheetTrigger,
+} from "@/components/ui/sheet"
 
 const insuranceCards = {
   popular: [
@@ -113,12 +118,12 @@ export default function Home() {
   return (
     <div className="flex min-h-screen flex-col">
       <header className="sticky top-0 z-40 w-full border-b bg-background">
-        <div className="container flex h-16 items-center space-x-4 sm:justify-between sm:space-x-0">
+        <div className="container flex h-16 items-center space-x-4 sm:justify-between sm:space-x-0 px-4">
           <div className="flex gap-2 items-center text-xl font-bold">
             <Shield className="h-6 w-6" />
             <span>SafeSense</span>
           </div>
-          <div className="flex flex-1 items-center justify-end space-x-4">
+          <div className="hidden md:flex flex-1 items-center justify-end space-x-4">
             <nav className="flex items-center space-x-1">
               <Link href="/features" className="px-3 py-2 text-sm font-medium">
                 <TranslatedText text="Features" />
@@ -151,47 +156,80 @@ export default function Home() {
               </div>
             </nav>
           </div>
+          <div className="md:hidden flex items-center gap-2">
+            <Sheet>
+              <SheetTrigger>
+                <Button variant="ghost" size="icon">
+                  <Menu className="h-5 w-5" />
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="right" className="w-[300px]">
+                <nav className="flex flex-col space-y-4 mt-6">
+                  <Link href="/features" className="text-sm font-medium">
+                    <TranslatedText text="Features" />
+                  </Link>
+                  <Link href="/insurance" className="text-sm font-medium">
+                    <TranslatedText text="Insurance" />
+                  </Link>
+                  <Link href="#pricing" className="text-sm font-medium">
+                    <TranslatedText text="Pricing" />
+                  </Link>
+                  <Link href="/faq" className="text-sm font-medium">
+                    <TranslatedText text="FAQ" />
+                  </Link>
+                  <Link href="#contact" className="text-sm font-medium">
+                    <TranslatedText text="Contact" />
+                  </Link>
+                  <div className="pt-4 border-t">
+                    <Link href="/auth/login">
+                      <Button variant="outline" className="w-full">
+                        <TranslatedText text="Sign In" />
+                      </Button>
+                    </Link>
+                    <Link href="/auth/register" className="mt-2 block">
+                      <Button className="w-full">
+                        <TranslatedText text="Get Started" />
+                      </Button>
+                    </Link>
+                  </div>
+                </nav>
+              </SheetContent>
+            </Sheet>
+            <LanguageSelector />
+            <ThemeToggle />
+          </div>
         </div>
       </header>
       <main className="flex-1">
-        <section className="w-full py-12 md:py-24 lg:py-32 xl:py-48">
-          <div className="container px-4 md:px-6">
-            <div className="grid gap-6 lg:grid-cols-2 lg:gap-12 xl:grid-cols-2">
-              <div className="flex flex-col justify-center space-y-4">
-                <div className="space-y-2">
-                  <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none">
-                    <TranslatedText text="Blockchain-Powered Insurance for Everything" />
-                  </h1>
-                  <p className="max-w-[600px] text-muted-foreground md:text-xl">
-                    <TranslatedText text="From crypto to cars, health to homes - protect what matters with our innovative blockchain insurance solutions." />
-                  </p>
-                </div>
-                <div className="flex flex-col gap-2 min-[400px]:flex-row">
-                  <Link href="/get-coverage">
-                    <Button size="lg">
-                      <TranslatedText text="Get Coverage Now" />
-                    </Button>
-                  </Link>
-                  <Link href="/about">
-                    <Button size="lg" variant="outline">
-                      <TranslatedText text="Learn More" />
-                    </Button>
-                  </Link>
-                </div>
+        <section className="w-full py-8 md:py-24 lg:py-32 xl:py-48">
+          <div className="container px-4">
+            <div className="flex flex-col items-center text-center space-y-4">
+              <div className="space-y-2">
+                <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl">
+                  <TranslatedText text="Blockchain-Powered Insurance for Everything" />
+                </h1>
+                <p className="text-muted-foreground">
+                  <TranslatedText text="From crypto to cars, health to homes - protect what matters with our innovative blockchain insurance solutions." />
+                </p>
               </div>
-              <div className="flex items-center justify-center">
-                <div className="relative h-[350px] w-[350px] rounded-full bg-gradient-to-b from-primary/20 to-primary/5 p-4">
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <Shield className="h-40 w-40 text-primary" />
-                  </div>
-                </div>
+              <div className="flex flex-col gap-2 w-full max-w-sm">
+                <Link href="/get-coverage">
+                  <Button size="lg" className="w-full">
+                    <TranslatedText text="Get Coverage Now" />
+                  </Button>
+                </Link>
+                <Link href="/about">
+                  <Button size="lg" variant="outline" className="w-full">
+                    <TranslatedText text="Learn More" />
+                  </Button>
+                </Link>
               </div>
             </div>
           </div>
         </section>
 
-        <section id="features" className="w-full py-12 md:py-24 lg:py-32 bg-muted/50">
-          <div className="container px-4 md:px-6">
+        <section id="features" className="w-full py-8 md:py-24 lg:py-32 bg-muted/50">
+          <div className="container px-4">
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
                 <h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight">
@@ -246,8 +284,8 @@ export default function Home() {
           </div>
         </section>
 
-        <section id="insurance-categories" className="w-full py-12 md:py-24 lg:py-32">
-          <div className="container px-4 md:px-6">
+        <section id="insurance-categories" className="w-full py-8 md:py-24 lg:py-32">
+          <div className="container px-4">
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
                 <h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight">
@@ -309,8 +347,8 @@ export default function Home() {
           </div>
         </section>
 
-        <section id="how-it-works" className="w-full py-12 md:py-24 lg:py-32 bg-muted/50">
-          <div className="container px-4 md:px-6">
+        <section id="how-it-works" className="w-full py-8 md:py-24 lg:py-32 bg-muted/50">
+          <div className="container px-4">
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
                 <h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight">
@@ -362,8 +400,8 @@ export default function Home() {
           </div>
         </section>
 
-        <section id="pricing" className="w-full py-12 md:py-24 lg:py-32">
-          <div className="container px-4 md:px-6">
+        <section id="pricing" className="w-full py-8 md:py-24 lg:py-32">
+          <div className="container px-4">
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
                 <h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight">

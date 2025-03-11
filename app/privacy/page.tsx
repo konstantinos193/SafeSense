@@ -7,14 +7,14 @@ export default function PrivacyPage() {
     <div className="flex min-h-screen flex-col">
       <header className="sticky top-0 z-40 w-full border-b bg-background">
         <div className="container flex h-16 items-center space-x-4 sm:justify-between sm:space-x-0">
-          <div className="flex gap-2 items-center text-xl font-bold">
+          <div className="flex gap-2 items-center text-lg md:text-xl font-bold">
             <Link href="/" className="flex items-center gap-2">
-              <Shield className="h-6 w-6" />
+              <Shield className="h-5 w-5 md:h-6 md:w-6" />
               <span>SafeSense</span>
             </Link>
           </div>
-          <div className="flex flex-1 items-center justify-end space-x-4">
-            <nav className="flex items-center space-x-1">
+          <div className="flex flex-1 items-center justify-end space-x-2 md:space-x-4">
+            <nav className="hidden sm:flex items-center space-x-1">
               <Link href="/features" className="px-3 py-2 text-sm font-medium">
                 Features
               </Link>
@@ -30,23 +30,23 @@ export default function PrivacyPage() {
               <Link href="/#contact" className="px-3 py-2 text-sm font-medium">
                 Contact
               </Link>
-              <Button asChild>
-                <Link href="/get-coverage">Get Started</Link>
-              </Button>
             </nav>
+            <Button asChild size="sm" className="text-xs md:text-sm">
+              <Link href="/get-coverage">Get Started</Link>
+            </Button>
           </div>
         </div>
       </header>
 
       <main className="flex-1">
-        <section className="w-full py-12 md:py-24 lg:py-32 bg-gradient-to-b from-primary/20 to-background">
-          <div className="container px-4 md:px-6">
+        <section className="w-full py-8 md:py-12 lg:py-16 bg-gradient-to-b from-primary/20 to-background">
+          <div className="container px-2 sm:px-4 md:px-6">
             <div className="flex flex-col items-center text-center space-y-4">
               <div className="space-y-2">
-                <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
+                <h1 className="text-2xl font-bold tracking-tighter sm:text-3xl md:text-4xl">
                   Privacy Policy
                 </h1>
-                <p className="max-w-[800px] text-muted-foreground md:text-xl/relaxed">
+                <p className="max-w-[800px] text-muted-foreground text-sm md:text-base">
                   Last updated: March 1, 2025
                 </p>
               </div>
@@ -54,78 +54,76 @@ export default function PrivacyPage() {
           </div>
         </section>
 
-        <section className="w-full py-12 md:py-24">
-          <div className="container px-4 md:px-6">
-            <div className="flex flex-col md:flex-row gap-8">
-              <div className="md:w-1/4">
-                <div className="sticky top-24 p-6 bg-background rounded-lg border">
-                  <h3 className="text-lg font-semibold mb-4">Table of Contents</h3>
-                  <nav className="space-y-2">
-                    {[
-                      "Introduction",
-                      "Information Collection",
-                      "Use of Data",
-                      "Blockchain Data",
-                      "Data Sharing",
-                      "Data Security",
-                      "Data Retention",
-                      "Your Rights",
-                      "Cookies",
-                      "Analytics",
-                      "Children's Privacy",
-                      "International Transfers",
-                      "Changes to Policy",
-                      "Contact Us"
-                    ].map((item, index) => (
-                      <a 
-                        key={index}
-                        href={`#${item.toLowerCase().replace(/ /g, '-')}`}
-                        className="block text-sm text-muted-foreground hover:text-primary transition-colors"
-                      >
-                        {`${index + 1}. ${item}`}
-                      </a>
-                    ))}
-                  </nav>
-                </div>
+        <section className="w-full py-8 md:py-12">
+          <div className="container px-2 sm:px-4 md:px-6">
+            <div className="flex flex-col gap-6">
+              <div className="p-4 bg-background rounded-lg border">
+                <h3 className="text-lg font-semibold mb-4">Table of Contents</h3>
+                <nav className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  {[
+                    "Introduction",
+                    "Information Collection",
+                    "Use of Data",
+                    "Blockchain Data",
+                    "Data Sharing",
+                    "Data Security",
+                    "Data Retention",
+                    "Your Rights",
+                    "Cookies",
+                    "Analytics",
+                    "Children's Privacy",
+                    "International Transfers",
+                    "Changes to Policy",
+                    "Contact Us"
+                  ].map((item, index) => (
+                    <a 
+                      key={index}
+                      href={`#${item.toLowerCase().replace(/ /g, '-')}`}
+                      className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                    >
+                      {`${index + 1}. ${item}`}
+                    </a>
+                  ))}
+                </nav>
               </div>
 
-              <div className="md:w-3/4">
-                <div className="prose prose-lg max-w-none">
-                  {sections.map((section, index) => (
-                    <section 
-                      key={index}
-                      id={section.id}
-                      className="mb-12 p-6 bg-background rounded-lg border"
-                    >
-                      <h2 className="text-2xl font-bold mb-4">
-                        {`${index + 1}. ${section.title}`}
-                      </h2>
-                      {section.content}
+              <div className="prose prose-sm sm:prose-base max-w-none">
+                {sections.map((section, index) => (
+                  <section 
+                    key={index}
+                    id={section.id}
+                    className="mb-6 p-4 sm:p-6 bg-background rounded-lg border"
+                  >
+                    <h2 className="text-xl sm:text-2xl font-bold mb-3">
+                      {`${index + 1}. ${section.title}`}
+                    </h2>
+                    {section.content}
                   </section>
-                  ))}
-                </div>
+                ))}
               </div>
             </div>
           </div>
         </section>
       </main>
 
-      <footer className="w-full border-t py-6 md:py-0">
-        <div className="container flex flex-col items-center justify-between gap-4 md:h-24 md:flex-row">
-          <div className="flex gap-2 items-center text-lg font-bold">
-            <Shield className="h-5 w-5" />
-            <span>SafeSense</span>
-          </div>
-          <p className="text-center text-sm leading-loose text-muted-foreground md:text-left">
-            © 2025 SafeSense. All rights reserved.
-          </p>
-          <div className="flex gap-4">
-            <Link href="/terms" className="text-sm text-muted-foreground underline-offset-4 hover:underline">
-              Terms
-            </Link>
-            <Link href="/privacy" className="text-sm text-primary underline-offset-4 hover:underline">
-              Privacy
-            </Link>
+      <footer className="w-full border-t py-4 md:py-6">
+        <div className="container px-2 sm:px-4 md:px-6">
+          <div className="flex flex-col items-center justify-center gap-2 md:flex-row md:justify-between">
+            <div className="flex gap-2 items-center text-base md:text-lg font-bold">
+              <Shield className="h-4 w-4 md:h-5 md:w-5" />
+              <span>SafeSense</span>
+            </div>
+            <p className="text-center text-xs md:text-sm text-muted-foreground md:text-left">
+              © 2025 SafeSense. All rights reserved.
+            </p>
+            <div className="flex gap-2 md:gap-4">
+              <Link href="/terms" className="text-xs md:text-sm text-muted-foreground underline-offset-4 hover:underline">
+                Terms
+              </Link>
+              <Link href="/privacy" className="text-xs md:text-sm text-primary underline-offset-4 hover:underline">
+                Privacy
+              </Link>
+            </div>
           </div>
         </div>
       </footer>

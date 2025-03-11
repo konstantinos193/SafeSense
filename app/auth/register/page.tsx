@@ -278,7 +278,7 @@ export default function RegisterPage() {
   return (
     <div className="flex min-h-screen flex-col">
       <header className="sticky top-0 z-40 w-full border-b bg-background">
-        <div className="container flex h-16 items-center space-x-4 sm:justify-between sm:space-x-0">
+        <div className="container flex h-16 items-center space-x-4 px-4 sm:justify-between sm:space-x-0">
           <div className="flex gap-2 items-center text-xl font-bold">
             <Link href="/" className="flex items-center gap-2">
               <Shield className="h-6 w-6" />
@@ -287,7 +287,7 @@ export default function RegisterPage() {
           </div>
           <div className="flex flex-1 items-center justify-end space-x-4">
             <Link href="/auth/login">
-              <Button variant="ghost">
+              <Button variant="ghost" className="text-sm sm:text-base">
                 <TranslatedText text="Sign In" />
               </Button>
             </Link>
@@ -295,16 +295,16 @@ export default function RegisterPage() {
         </div>
       </header>
 
-      <main className="flex-1 py-12 md:py-16 lg:py-20">
-        <div className="container px-4 md:px-6">
+      <main className="flex-1 py-8 md:py-12 lg:py-16">
+        <div className="container px-4">
           <div className="mx-auto max-w-md space-y-6">
             <div className="space-y-2 text-center">
-              <h1 className="text-3xl font-bold">Create an Account</h1>
-              <p className="text-muted-foreground">Choose how you want to register with SafeSense</p>
+              <h1 className="text-2xl font-bold sm:text-3xl">Create an Account</h1>
+              <p className="text-sm sm:text-base text-muted-foreground">Choose how you want to register with SafeSense</p>
             </div>
 
             {error && (
-              <Alert variant="destructive">
+              <Alert variant="destructive" className="text-sm">
                 <Info className="h-4 w-4" />
                 <AlertTitle>Error</AlertTitle>
                 <AlertDescription>{error}</AlertDescription>
@@ -312,7 +312,7 @@ export default function RegisterPage() {
             )}
 
             {success && (
-              <Alert className="bg-primary/20 text-primary">
+              <Alert className="bg-primary/20 text-primary text-sm">
                 <Check className="h-4 w-4" />
                 <AlertTitle>Success</AlertTitle>
                 <AlertDescription>{success}</AlertDescription>
@@ -321,12 +321,12 @@ export default function RegisterPage() {
 
             <Tabs value={authMethod} className="w-full" onValueChange={(value) => setAuthMethod(value as "email" | "wallet")}>
               <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="email">
-                  <Mail className="mr-2 h-4 w-4" />
+                <TabsTrigger value="email" className="text-xs sm:text-sm">
+                  <Mail className="mr-1 sm:mr-2 h-4 w-4" />
                   Email
                 </TabsTrigger>
-                <TabsTrigger value="wallet">
-                  <Wallet className="mr-2 h-4 w-4" />
+                <TabsTrigger value="wallet" className="text-xs sm:text-sm">
+                  <Wallet className="mr-1 sm:mr-2 h-4 w-4" />
                   Wallet
                 </TabsTrigger>
               </TabsList>

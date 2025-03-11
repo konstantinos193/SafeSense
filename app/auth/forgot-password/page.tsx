@@ -54,11 +54,11 @@ export default function ForgotPasswordPage() {
   return (
     <div className="flex min-h-screen flex-col">
       <header className="sticky top-0 z-40 w-full border-b bg-background">
-        <div className="container flex h-16 items-center space-x-4 sm:justify-between sm:space-x-0">
+        <div className="container flex h-16 items-center space-x-4 sm:justify-between sm:space-x-0 px-4">
           <div className="flex gap-2 items-center text-xl font-bold">
             <Link href="/" className="flex items-center gap-2">
               <Shield className="h-6 w-6" />
-              <span>SafeSense</span>
+              <span className="hidden sm:inline">SafeSense</span>
             </Link>
           </div>
           <div className="flex flex-1 items-center justify-end space-x-4">
@@ -69,12 +69,12 @@ export default function ForgotPasswordPage() {
         </div>
       </header>
 
-      <main className="flex-1 py-12 md:py-16 lg:py-20">
-        <div className="container px-4 md:px-6">
+      <main className="flex-1 py-8 md:py-16 lg:py-20">
+        <div className="container px-4">
           <div className="mx-auto max-w-md space-y-6">
             <div className="space-y-2 text-center">
-              <h1 className="text-3xl font-bold">Forgot Password</h1>
-              <p className="text-muted-foreground">Enter your email to receive password reset instructions</p>
+              <h1 className="text-2xl sm:text-3xl font-bold">Forgot Password</h1>
+              <p className="text-sm sm:text-base text-muted-foreground">Enter your email to receive password reset instructions</p>
             </div>
 
             {error && (
@@ -96,8 +96,8 @@ export default function ForgotPasswordPage() {
             <Card>
               <form onSubmit={handleSubmit}>
                 <CardHeader>
-                  <CardTitle>Reset Your Password</CardTitle>
-                  <CardDescription>We'll send you an email with instructions to reset your password</CardDescription>
+                  <CardTitle className="text-xl sm:text-2xl">Reset Your Password</CardTitle>
+                  <CardDescription className="text-sm sm:text-base">We'll send you an email with instructions to reset your password</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="space-y-2">
@@ -109,14 +109,15 @@ export default function ForgotPasswordPage() {
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       required
+                      className="text-sm sm:text-base"
                     />
                   </div>
                 </CardContent>
                 <CardFooter className="flex flex-col space-y-4">
-                  <Button type="submit" className="w-full" disabled={isLoading}>
+                  <Button type="submit" className="w-full text-sm sm:text-base" disabled={isLoading}>
                     {isLoading ? "Sending..." : "Send Reset Instructions"}
                   </Button>
-                  <div className="text-center text-sm">
+                  <div className="text-center text-xs sm:text-sm">
                     <Link href="/auth/login" className="text-primary hover:underline">
                       <ArrowLeft className="inline h-3 w-3 mr-1" />
                       Back to Sign In

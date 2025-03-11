@@ -116,37 +116,37 @@ export default function DashboardPage() {
   return (
     <div className="flex min-h-screen flex-col">
       <header className="sticky top-0 z-40 w-full border-b bg-background">
-        <div className="container flex h-16 items-center space-x-4 sm:justify-between sm:space-x-0">
+        <div className="container flex h-16 items-center justify-between px-4">
           <div className="flex gap-2 items-center text-xl font-bold">
             <Link href="/" className="flex items-center gap-2">
               <Shield className="h-6 w-6" />
-              <span>SafeSense</span>
+              <span className="hidden sm:inline">SafeSense</span>
             </Link>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2">
             <Link href="/profile">
-              <Button variant="ghost" size="icon">
-                <User className="h-5 w-5" />
+              <Button variant="ghost" size="icon" className="h-9 w-9">
+                <User className="h-4 w-4" />
               </Button>
             </Link>
-            <Button variant="ghost" size="icon" onClick={handleSignOut}>
-              <LogOut className="h-5 w-5" />
+            <Button variant="ghost" size="icon" className="h-9 w-9" onClick={handleSignOut}>
+              <LogOut className="h-4 w-4" />
             </Button>
           </div>
         </div>
       </header>
 
-      <main className="flex-1 py-12">
-        <div className="container px-4 md:px-6">
-          <div className="space-y-8">
+      <main className="flex-1 py-8 sm:py-12">
+        <div className="container px-4">
+          <div className="space-y-6 sm:space-y-8">
             <div>
-              <h1 className="text-3xl font-bold">Welcome back, {user.first_name || 'User'}!</h1>
-              <p className="text-muted-foreground">
+              <h1 className="text-2xl sm:text-3xl font-bold">Welcome back, {user.first_name || 'User'}!</h1>
+              <p className="text-sm sm:text-base text-muted-foreground">
                 {user.wallet_address ? 'Wallet Connected' : 'Email'} Account
               </p>
             </div>
 
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-4 sm:gap-6 md:grid-cols-2 lg:grid-cols-3">
               <Card>
                 <CardHeader>
                   <CardTitle>Account Status</CardTitle>
@@ -190,14 +190,14 @@ export default function DashboardPage() {
         </div>
       </main>
 
-      <footer className="border-t py-6">
-        <div className="container px-4 md:px-6">
-          <div className="flex flex-col items-center justify-center gap-4 md:flex-row md:justify-between">
-            <div className="flex gap-2 items-center text-lg font-bold">
-              <Shield className="h-5 w-5" />
+      <footer className="border-t py-4 sm:py-6">
+        <div className="container px-4">
+          <div className="flex flex-col items-center justify-center gap-3 sm:gap-4 md:flex-row md:justify-between">
+            <div className="flex gap-2 items-center text-base sm:text-lg font-bold">
+              <Shield className="h-4 w-4 sm:h-5 sm:w-5" />
               <span>SafeSense</span>
             </div>
-            <p className="text-center text-sm text-muted-foreground md:text-left">
+            <p className="text-center text-xs sm:text-sm text-muted-foreground md:text-left">
               © 2025 SafeSense. All rights reserved.
             </p>
           </div>

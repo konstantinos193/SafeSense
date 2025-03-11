@@ -6,7 +6,8 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
-import { useState } from "react"
+import { useState, use } from "react"
+import React from "react"
 
 // Define the insurance types and their details
 const insuranceTypes = {
@@ -319,7 +320,7 @@ const insuranceTypes = {
 }
 
 export default function InsuranceDetails({ params }) {
-  const { type } = params
+  const { type } = use(params)
   const [activeTab, setActiveTab] = useState<string | null>(null)
 
   // Check if the insurance type exists
@@ -346,17 +347,17 @@ export default function InsuranceDetails({ params }) {
     <div className="flex min-h-screen flex-col">
       <header className="sticky top-0 z-40 w-full border-b bg-background">
         <div className="container flex h-16 items-center space-x-4 sm:justify-between sm:space-x-0">
-          <div className="flex gap-2 items-center text-xl font-bold">
+          <div className="flex gap-2 items-center text-lg md:text-xl font-bold">
             <Link href="/" className="flex items-center gap-2">
-              <Shield className="h-6 w-6" />
+              <Shield className="h-5 w-5 md:h-6 md:w-6" />
               <span>SafeSense</span>
             </Link>
           </div>
-          <div className="flex flex-1 items-center justify-end space-x-4">
-            <Link href="/" className="text-sm text-muted-foreground hover:underline">
+          <div className="flex flex-1 items-center justify-end space-x-2 md:space-x-4">
+            <Link href="/" className="text-xs md:text-sm text-muted-foreground hover:underline">
               Home
             </Link>
-            <Button asChild>
+            <Button asChild size="sm" className="text-xs md:text-sm">
               <Link href="/get-coverage">Get Coverage</Link>
             </Button>
           </div>
@@ -365,22 +366,26 @@ export default function InsuranceDetails({ params }) {
 
       <main className="flex-1">
         {/* Hero Section */}
-        <section className={`w-full py-12 md:py-24 ${insurance.color} text-white`}>
-          <div className="container px-4 md:px-6">
+        <section className={`w-full py-8 md:py-24 ${insurance.color} text-white`}>
+          <div className="container px-2 sm:px-4 md:px-6">
             <div className="flex flex-col items-center text-center space-y-4">
               <div className="inline-flex items-center justify-center p-2 rounded-full bg-white/10 backdrop-blur-sm">
-                {insurance.icon}
+                {React.cloneElement(insurance.icon, { className: "h-6 w-6 md:h-8 md:w-8" })}
               </div>
-              <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">{insurance.title}</h1>
-              <p className="max-w-[700px] text-white/80 md:text-xl">{insurance.description}</p>
-              <div className="flex flex-col sm:flex-row gap-3 mt-6">
-                <Button size="lg" variant="secondary" asChild>
+              <h1 className="text-2xl font-bold tracking-tighter sm:text-3xl md:text-4xl lg:text-5xl">
+                {insurance.title}
+              </h1>
+              <p className="max-w-[700px] text-white/80 text-sm md:text-base lg:text-xl">
+                {insurance.description}
+              </p>
+              <div className="flex flex-col sm:flex-row gap-2 mt-4">
+                <Button size="sm" variant="secondary" asChild className="w-full sm:w-auto">
                   <Link href="/get-coverage">Get Coverage Now</Link>
                 </Button>
                 <Button
-                  size="lg"
+                  size="sm"
                   variant="outline"
-                  className="bg-white/10 text-white border-white/20 hover:bg-white/20"
+                  className="bg-white/10 text-white border-white/20 hover:bg-white/20 w-full sm:w-auto"
                 >
                   <Link href="#coverage-options">View Coverage Options</Link>
                 </Button>
@@ -390,46 +395,48 @@ export default function InsuranceDetails({ params }) {
         </section>
 
         {/* Tabs Section */}
-        <section className="w-full py-12 md:py-24">
-          <div className="container px-4 md:px-6">
+        <section className="w-full py-8 md:py-12 lg:py-24">
+          <div className="container px-2 sm:px-4 md:px-6">
             <Accordion type="single" collapsible className="w-full space-y-4">
               {/* Coverage Options Accordion */}
               <AccordionItem value="coverage">
-                <AccordionTrigger className="text-xl font-semibold">
+                <AccordionTrigger className="text-lg md:text-xl font-semibold">
                   Coverage Options
                 </AccordionTrigger>
                 <AccordionContent>
-                <Card id="coverage-options">
-                  <CardHeader>
-                    <CardTitle>Coverage Options</CardTitle>
-                    <CardDescription>Comprehensive protection tailored to your needs</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="grid gap-6 md:grid-cols-2">
+                  <Card id="coverage-options">
+                    <CardHeader>
+                      <CardTitle>Coverage Options</CardTitle>
+                      <CardDescription className="text-sm md:text-base">
+                        Comprehensive protection tailored to your needs
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="grid gap-4 md:gap-6 md:grid-cols-2">
                         {insurance.coverageOptions.map((option, index) => (
-                        <div key={index} className="flex items-start gap-2">
-                          <div className={`p-1.5 rounded-full ${insurance.color} text-white shrink-0`}>
-                            <Check className="h-4 w-4" />
+                          <div key={index} className="flex items-start gap-2">
+                            <div className={`p-1.5 rounded-full ${insurance.color} text-white shrink-0`}>
+                              <Check className="h-4 w-4" />
+                            </div>
+                            <div>
+                              <p className="text-sm md:text-base">{option}</p>
+                            </div>
                           </div>
-                          <div>
-                            <p>{option}</p>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </CardContent>
-                  <CardFooter>
-                    <Button asChild>
-                      <Link href="/get-coverage">Get a Quote</Link>
-                    </Button>
-                  </CardFooter>
-                </Card>
+                        ))}
+                      </div>
+                    </CardContent>
+                    <CardFooter>
+                      <Button asChild size="sm" className="w-full sm:w-auto">
+                        <Link href="/get-coverage">Get a Quote</Link>
+                      </Button>
+                    </CardFooter>
+                  </Card>
                 </AccordionContent>
               </AccordionItem>
 
               {/* Benefits Accordion */}
               <AccordionItem value="benefits">
-                <AccordionTrigger className="text-xl font-semibold">
+                <AccordionTrigger className="text-lg md:text-xl font-semibold">
                   Benefits
                 </AccordionTrigger>
                 <AccordionContent>
@@ -458,7 +465,7 @@ export default function InsuranceDetails({ params }) {
 
               {/* How It Works Accordion */}
               <AccordionItem value="how-it-works">
-                <AccordionTrigger className="text-xl font-semibold">
+                <AccordionTrigger className="text-lg md:text-xl font-semibold">
                   How It Works
                 </AccordionTrigger>
                 <AccordionContent>
@@ -494,7 +501,7 @@ export default function InsuranceDetails({ params }) {
 
               {/* FAQ Accordion */}
               <AccordionItem value="faq">
-                <AccordionTrigger className="text-xl font-semibold">
+                <AccordionTrigger className="text-lg md:text-xl font-semibold">
                   FAQ
                 </AccordionTrigger>
                 <AccordionContent>
@@ -527,26 +534,28 @@ export default function InsuranceDetails({ params }) {
         </section>
 
         {/* Testimonials Section */}
-        <section className="w-full py-12 md:py-24 bg-muted/50">
-          <div className="container px-4 md:px-6">
-            <div className="flex flex-col items-center text-center space-y-4 mb-8">
-              <h2 className="text-3xl font-bold tracking-tighter">What Our Customers Say</h2>
-              <p className="text-muted-foreground md:text-lg">Real experiences from SafeSense users</p>
+        <section className="w-full py-8 md:py-12 lg:py-24 bg-muted/50">
+          <div className="container px-2 sm:px-4 md:px-6">
+            <div className="flex flex-col items-center text-center space-y-2 mb-4 md:mb-8">
+              <h2 className="text-2xl md:text-3xl font-bold tracking-tighter">What Our Customers Say</h2>
+              <p className="text-muted-foreground text-sm md:text-base lg:text-lg">
+                Real experiences from SafeSense users
+              </p>
             </div>
 
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-4 md:gap-6 md:grid-cols-2 lg:grid-cols-3">
               <Card>
-                <CardContent className="pt-6">
-                  <div className="flex items-start gap-4 mb-4">
-                    <div className="rounded-full bg-primary/10 p-2">
-                      <Users className="h-5 w-5 text-primary" />
+                <CardContent className="pt-4 md:pt-6">
+                  <div className="flex items-start gap-2 md:gap-4 mb-2 md:mb-4">
+                    <div className="rounded-full bg-primary/10 p-1.5 md:p-2">
+                      <Users className="h-4 w-4 md:h-5 md:w-5 text-primary" />
                     </div>
                     <div>
-                      <h3 className="font-medium">Alex Thompson</h3>
-                      <p className="text-sm text-muted-foreground">Customer since 2023</p>
+                      <h3 className="font-medium text-sm md:text-base">Alex Thompson</h3>
+                      <p className="text-xs md:text-sm text-muted-foreground">Customer since 2023</p>
                     </div>
                   </div>
-                  <p className="text-muted-foreground">
+                  <p className="text-muted-foreground text-xs md:text-sm">
                     "The automatic claims process is incredible. When my flight was delayed by 4 hours, I received
                     compensation directly to my wallet without having to file anything. This is how insurance should
                     work!"
@@ -555,17 +564,17 @@ export default function InsuranceDetails({ params }) {
               </Card>
 
               <Card>
-                <CardContent className="pt-6">
-                  <div className="flex items-start gap-4 mb-4">
-                    <div className="rounded-full bg-primary/10 p-2">
-                      <Users className="h-5 w-5 text-primary" />
+                <CardContent className="pt-4 md:pt-6">
+                  <div className="flex items-start gap-2 md:gap-4 mb-2 md:mb-4">
+                    <div className="rounded-full bg-primary/10 p-1.5 md:p-2">
+                      <Users className="h-4 w-4 md:h-5 md:w-5 text-primary" />
                     </div>
                     <div>
-                      <h3 className="font-medium">Sarah Chen</h3>
-                      <p className="text-sm text-muted-foreground">Customer since 2022</p>
+                      <h3 className="font-medium text-sm md:text-base">Sarah Chen</h3>
+                      <p className="text-xs md:text-sm text-muted-foreground">Customer since 2022</p>
                     </div>
                   </div>
-                  <p className="text-muted-foreground">
+                  <p className="text-muted-foreground text-xs md:text-sm">
                     "After my DeFi protocol was hacked, I was devastated. SafeSense verified the incident and processed
                     my claim within 48 hours. Their crypto insurance literally saved my investment portfolio."
                   </p>
@@ -573,17 +582,17 @@ export default function InsuranceDetails({ params }) {
               </Card>
 
               <Card>
-                <CardContent className="pt-6">
-                  <div className="flex items-start gap-4 mb-4">
-                    <div className="rounded-full bg-primary/10 p-2">
-                      <Users className="h-5 w-5 text-primary" />
+                <CardContent className="pt-4 md:pt-6">
+                  <div className="flex items-start gap-2 md:gap-4 mb-2 md:mb-4">
+                    <div className="rounded-full bg-primary/10 p-1.5 md:p-2">
+                      <Users className="h-4 w-4 md:h-5 md:w-5 text-primary" />
                     </div>
                     <div>
-                      <h3 className="font-medium">Michael Rodriguez</h3>
-                      <p className="text-sm text-muted-foreground">Customer since 2024</p>
+                      <h3 className="font-medium text-sm md:text-base">Michael Rodriguez</h3>
+                      <p className="text-xs md:text-sm text-muted-foreground">Customer since 2024</p>
                     </div>
                   </div>
-                  <p className="text-muted-foreground">
+                  <p className="text-muted-foreground text-xs md:text-sm">
                     "The pay-per-mile car insurance has saved me hundreds of dollars since I work from home. I love that
                     I only pay for what I actually use, and the app makes everything so transparent."
                   </p>
@@ -594,19 +603,19 @@ export default function InsuranceDetails({ params }) {
         </section>
 
         {/* CTA Section */}
-        <section className="w-full py-12 md:py-24">
-          <div className="container px-4 md:px-6">
+        <section className="w-full py-8 md:py-12 lg:py-24">
+          <div className="container px-2 sm:px-4 md:px-6">
             <div className="flex flex-col items-center text-center space-y-4">
-              <h2 className="text-3xl font-bold tracking-tighter">Ready to Get Protected?</h2>
-              <p className="text-muted-foreground md:text-lg max-w-[600px]">
+              <h2 className="text-2xl md:text-3xl font-bold tracking-tighter">Ready to Get Protected?</h2>
+              <p className="text-muted-foreground text-sm md:text-base max-w-[600px]">
                 Join thousands of satisfied customers who trust SafeSense with their {insurance.title.toLowerCase()}{" "}
                 needs.
               </p>
-              <div className="flex flex-col sm:flex-row gap-3 mt-6">
-                <Button size="lg" asChild>
+              <div className="flex flex-col sm:flex-row gap-2 mt-4">
+                <Button size="sm" asChild>
                   <Link href="/get-coverage">Get Coverage Now</Link>
                 </Button>
-                <Button size="lg" variant="outline" asChild>
+                <Button size="sm" variant="outline" asChild>
                   <Link href="#contact">Contact Sales</Link>
                 </Button>
               </div>
@@ -615,12 +624,12 @@ export default function InsuranceDetails({ params }) {
         </section>
 
         {/* Contact Section */}
-        <section id="contact" className="w-full py-12 md:py-24 bg-muted/50">
-          <div className="container px-4 md:px-6">
+        <section id="contact" className="w-full py-8 md:py-12 lg:py-24 bg-muted/50">
+          <div className="container px-2 sm:px-4 md:px-6">
             <div className="grid gap-6 lg:grid-cols-2 lg:gap-12">
               <div className="flex flex-col justify-center space-y-4">
                 <div className="space-y-2">
-                  <h2 className="text-3xl font-bold tracking-tighter">Have Questions?</h2>
+                  <h2 className="text-2xl md:text-3xl font-bold tracking-tighter">Have Questions?</h2>
                   <p className="text-muted-foreground">
                     Our insurance experts are here to help you find the perfect coverage for your needs.
                   </p>
@@ -675,20 +684,20 @@ export default function InsuranceDetails({ params }) {
         </section>
       </main>
 
-      <footer className="w-full border-t py-6 md:py-0">
-        <div className="container flex flex-col items-center justify-between gap-4 md:h-24 md:flex-row">
-          <div className="flex gap-2 items-center text-lg font-bold">
-            <Shield className="h-5 w-5" />
+      <footer className="w-full border-t py-4 md:py-6">
+        <div className="container flex flex-col items-center justify-between gap-2 md:h-24 md:flex-row px-2 sm:px-4">
+          <div className="flex gap-2 items-center text-base md:text-lg font-bold">
+            <Shield className="h-4 w-4 md:h-5 md:w-5" />
             <span>SafeSense</span>
           </div>
-          <p className="text-center text-sm leading-loose text-muted-foreground md:text-left">
+          <p className="text-center text-xs md:text-sm leading-loose text-muted-foreground md:text-left">
             © 2025 SafeSense. All rights reserved.
           </p>
-          <div className="flex gap-4">
-            <Link href="#" className="text-sm text-muted-foreground underline-offset-4 hover:underline">
+          <div className="flex gap-2 md:gap-4">
+            <Link href="#" className="text-xs md:text-sm text-muted-foreground underline-offset-4 hover:underline">
               Terms
             </Link>
-            <Link href="#" className="text-sm text-muted-foreground underline-offset-4 hover:underline">
+            <Link href="#" className="text-xs md:text-sm text-muted-foreground underline-offset-4 hover:underline">
               Privacy
             </Link>
           </div>

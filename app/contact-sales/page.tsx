@@ -26,13 +26,13 @@ export default function ContactSalesPage() {
         </div>
       </header>
       
-      <main className="flex-1 py-12 md:py-16 lg:py-20">
+      <main className="flex-1 py-8 md:py-16 lg:py-20">
         <div className="container px-4 md:px-6">
           <div className="grid gap-6 lg:grid-cols-2 lg:gap-12">
             <div className="flex flex-col justify-center space-y-4">
               <div className="space-y-2">
-                <h1 className="text-3xl font-bold tracking-tight">Enterprise Solutions</h1>
-                <p className="text-muted-foreground">
+                <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Enterprise Solutions</h1>
+                <p className="text-muted-foreground text-sm sm:text-base">
                   Custom insurance solutions for businesses and institutions of all sizes.
                 </p>
               </div>
@@ -109,6 +109,7 @@ export default function ContactSalesPage() {
             <div>
               <Card>
                 <CardHeader>
+                  <CardTitle className="text-xl sm:text-2xl">Contact Our Sales Team</CardTitle>
                   <CardTitle>Contact Our Sales Team</CardTitle>
                   <CardDescription>
                     Fill out the form below and our enterprise team will get back to you within 24 hours.
