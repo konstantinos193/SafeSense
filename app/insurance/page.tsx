@@ -1,3 +1,6 @@
+"use client"
+
+import React, { useState } from "react"
 import Link from "next/link"
 import {
   Shield,
@@ -22,9 +25,117 @@ import {
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+
+const insuranceCards = {
+  crypto: [
+    {
+      icon: <Shield className="h-8 w-8 text-primary" />,
+      title: "Crypto Insurance",
+      description: "Protect your DeFi investments, crypto wallets, and exchange assets against hacks, theft, and smart contract failures.",
+      type: "crypto"
+    },
+    {
+      icon: <Lock className="h-8 w-8 text-primary" />,
+      title: "Tokenized Asset Insurance",
+      description: "NFT insurance and tokenized real estate coverage against theft and damage.",
+      type: "tokenized-asset"
+    },
+    {
+      icon: <Gamepad className="h-8 w-8 text-primary" />,
+      title: "Gaming & Esports Insurance",
+      description: "Esports tournament coverage and in-game asset insurance.",
+      type: "gaming-esports"
+    }
+  ],
+  personal: [
+    {
+      icon: <Heart className="h-8 w-8 text-primary" />,
+      title: "Health Insurance",
+      description: "Decentralized medical records and usage-based premiums with DeFi health savings.",
+      type: "health"
+    },
+    {
+      icon: <Users className="h-8 w-8 text-primary" />,
+      title: "Life Insurance",
+      description: "Blockchain-based life policies with automatic execution and cryptocurrency death benefits.",
+      type: "life"
+    },
+    {
+      icon: <Plane className="h-8 w-8 text-primary" />,
+      title: "Travel Insurance",
+      description: "Flight delay compensation and lost luggage coverage with automatic claims processing.",
+      type: "travel"
+    },
+    {
+      icon: <Dog className="h-8 w-8 text-primary" />,
+      title: "Pet Insurance",
+      description: "Smart pet insurance with trackable health data and automatic claims.",
+      type: "pet"
+    },
+    {
+      icon: <Umbrella className="h-8 w-8 text-primary" />,
+      title: "Travel & Leisure Insurance",
+      description: "Adventure sports coverage and travel theft insurance with automatic claims.",
+      type: "travel-leisure"
+    }
+  ],
+  property: [
+    {
+      icon: <Home className="h-8 w-8 text-primary" />,
+      title: "Home Insurance",
+      description: "Smart home integration with IoT sensors for automatic damage detection and claims.",
+      type: "home"
+    },
+    {
+      icon: <Car className="h-8 w-8 text-primary" />,
+      title: "Car Insurance",
+      description: "Smart telematics-based claims and pay-per-mile options with automatic payouts via blockchain.",
+      type: "car"
+    },
+    {
+      icon: <Cloud className="h-8 w-8 text-primary" />,
+      title: "Disaster Relief Insurance",
+      description: "Natural disaster coverage with community-based insurance pools.",
+      type: "disaster-relief"
+    }
+  ],
+  business: [
+    {
+      icon: <Briefcase className="h-8 w-8 text-primary" />,
+      title: "Business Insurance",
+      description: "Smart contracts for employee benefits and supply chain insurance with automatic claims.",
+      type: "business"
+    },
+    {
+      icon: <Calendar className="h-8 w-8 text-primary" />,
+      title: "Event Insurance",
+      description: "Coverage for event cancellations or disruptions with automatic refunds.",
+      type: "event"
+    },
+    {
+      icon: <Leaf className="h-8 w-8 text-primary" />,
+      title: "Agricultural Insurance",
+      description: "Crop and livestock insurance with automatic claims based on weather data.",
+      type: "agricultural"
+    },
+    {
+      icon: <FileText className="h-8 w-8 text-primary" />,
+      title: "Intellectual Property Insurance",
+      description: "Patent protection and copyright insurance with automatic legal fee coverage.",
+      type: "intellectual-property"
+    },
+    {
+      icon: <Leaf className="h-8 w-8 text-primary" />,
+      title: "Carbon Credit Insurance",
+      description: "Environmental damage insurance for carbon offset efforts.",
+      type: "carbon-credit"
+    }
+  ]
+};
 
 export default function InsurancePage() {
+  const [selectedCategory, setSelectedCategory] = useState("crypto");
+  
   return (
     <div className="flex min-h-screen flex-col">
       <header className="sticky top-0 z-40 w-full border-b bg-background">
@@ -46,7 +157,7 @@ export default function InsurancePage() {
               <Link href="/pricing" className="px-3 py-2 text-sm font-medium">
                 Pricing
               </Link>
-              <Link href="/#faq" className="px-3 py-2 text-sm font-medium">
+              <Link href="/faq" className="px-3 py-2 text-sm font-medium">
                 FAQ
               </Link>
               <Link href="/#contact" className="px-3 py-2 text-sm font-medium">
@@ -93,237 +204,52 @@ export default function InsurancePage() {
               <div className="space-y-2">
                 <h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight">Insurance Categories</h2>
                 <p className="max-w-[800px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                  From crypto to traditional assets, we've got you covered with innovative blockchain-based insurance
+                  Explore our innovative blockchain-powered insurance categories
                 </p>
               </div>
             </div>
 
-            <Tabs defaultValue="all" className="w-full max-w-6xl mx-auto">
-              <TabsList className="grid w-full grid-cols-5">
-                <TabsTrigger value="all">All Categories</TabsTrigger>
-                <TabsTrigger value="crypto">Crypto & Digital</TabsTrigger>
-                <TabsTrigger value="personal">Personal</TabsTrigger>
-                <TabsTrigger value="property">Property</TabsTrigger>
-                <TabsTrigger value="business">Business</TabsTrigger>
-              </TabsList>
-
-              <TabsContent value="all" className="mt-6">
-                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                  <InsuranceCard
-                    icon={<Shield className="h-8 w-8 text-primary" />}
-                    title="Crypto Insurance"
-                    description="Protect your DeFi investments, crypto wallets, and exchange assets against hacks, theft, and smart contract failures."
-                    type="crypto"
-                  />
-                  <InsuranceCard
-                    icon={<Car className="h-8 w-8 text-primary" />}
-                    title="Car Insurance"
-                    description="Smart telematics-based claims and pay-per-mile options with automatic payouts via blockchain."
-                    type="car"
-                  />
-                  <InsuranceCard
-                    icon={<Heart className="h-8 w-8 text-primary" />}
-                    title="Health Insurance"
-                    description="Decentralized medical records and usage-based premiums with DeFi health savings."
-                    type="health"
-                  />
-                  <InsuranceCard
-                    icon={<Home className="h-8 w-8 text-primary" />}
-                    title="Home Insurance"
-                    description="Smart home integration with IoT sensors for automatic damage detection and claims."
-                    type="home"
-                  />
-                  <InsuranceCard
-                    icon={<Plane className="h-8 w-8 text-primary" />}
-                    title="Travel Insurance"
-                    description="Flight delay compensation and lost luggage coverage with automatic claims processing."
-                    type="travel"
-                  />
-                  <InsuranceCard
-                    icon={<Briefcase className="h-8 w-8 text-primary" />}
-                    title="Business Insurance"
-                    description="Smart contracts for employee benefits and supply chain insurance with automatic claims."
-                    type="business"
-                  />
-                  <InsuranceCard
-                    icon={<Calendar className="h-8 w-8 text-primary" />}
-                    title="Event Insurance"
-                    description="Coverage for event cancellations or disruptions with automatic refunds."
-                    type="event"
-                  />
-                  <InsuranceCard
-                    icon={<Users className="h-8 w-8 text-primary" />}
-                    title="Life Insurance"
-                    description="Blockchain-based life policies with automatic execution and cryptocurrency death benefits."
-                    type="life"
-                  />
-                  <InsuranceCard
-                    icon={<Leaf className="h-8 w-8 text-primary" />}
-                    title="Agricultural Insurance"
-                    description="Crop and livestock insurance with automatic claims based on weather data."
-                    type="agricultural"
-                  />
-                  <InsuranceCard
-                    icon={<FileText className="h-8 w-8 text-primary" />}
-                    title="Intellectual Property Insurance"
-                    description="Patent protection and copyright insurance with automatic legal fee coverage."
-                    type="intellectual-property"
-                  />
-                  <InsuranceCard
-                    icon={<Lock className="h-8 w-8 text-primary" />}
-                    title="Tokenized Asset Insurance"
-                    description="NFT insurance and tokenized real estate coverage against theft and damage."
-                    type="tokenized-asset"
-                  />
-                  <InsuranceCard
-                    icon={<Cloud className="h-8 w-8 text-primary" />}
-                    title="Disaster Relief Insurance"
-                    description="Natural disaster coverage with community-based insurance pools."
-                    type="disaster-relief"
-                  />
-                  <InsuranceCard
-                    icon={<Dog className="h-8 w-8 text-primary" />}
-                    title="Pet Insurance"
-                    description="Smart pet insurance with trackable health data and automatic claims."
-                    type="pet"
-                  />
-                  <InsuranceCard
-                    icon={<Umbrella className="h-8 w-8 text-primary" />}
-                    title="Travel & Leisure Insurance"
-                    description="Adventure sports coverage and travel theft insurance with automatic claims."
-                    type="travel-leisure"
-                  />
-                  <InsuranceCard
-                    icon={<Leaf className="h-8 w-8 text-primary" />}
-                    title="Carbon Credit Insurance"
-                    description="Environmental damage insurance for carbon offset efforts."
-                    type="carbon-credit"
-                  />
-                  <InsuranceCard
-                    icon={<Gamepad className="h-8 w-8 text-primary" />}
-                    title="Gaming & Esports Insurance"
-                    description="Esports tournament coverage and in-game asset insurance."
-                    type="gaming-esports"
-                  />
+            <div className="flex justify-center gap-4 mt-8 flex-wrap">
+              <Button 
+                variant={selectedCategory === "crypto" ? "default" : "outline"}
+                onClick={() => setSelectedCategory("crypto")}
+                className="transition-all duration-200"
+              >
+                Crypto & Digital
+              </Button>
+              <Button 
+                variant={selectedCategory === "personal" ? "default" : "outline"}
+                onClick={() => setSelectedCategory("personal")}
+                className="transition-all duration-200"
+              >
+                Personal
+              </Button>
+              <Button 
+                variant={selectedCategory === "property" ? "default" : "outline"}
+                onClick={() => setSelectedCategory("property")}
+                className="transition-all duration-200"
+              >
+                Property
+              </Button>
+              <Button 
+                variant={selectedCategory === "business" ? "default" : "outline"}
+                onClick={() => setSelectedCategory("business")}
+                className="transition-all duration-200"
+              >
+                Business
+              </Button>
                 </div>
-              </TabsContent>
 
-              <TabsContent value="crypto" className="mt-6">
-                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                  <InsuranceCard
-                    icon={<Shield className="h-8 w-8 text-primary" />}
-                    title="Crypto Insurance"
-                    description="Protect your DeFi investments, crypto wallets, and exchange assets against hacks, theft, and smart contract failures."
-                    type="crypto"
-                  />
-                  <InsuranceCard
-                    icon={<Lock className="h-8 w-8 text-primary" />}
-                    title="Tokenized Asset Insurance"
-                    description="NFT insurance and tokenized real estate coverage against theft and damage."
-                    type="tokenized-asset"
-                  />
-                  <InsuranceCard
-                    icon={<Gamepad className="h-8 w-8 text-primary" />}
-                    title="Gaming & Esports Insurance"
-                    description="Esports tournament coverage and in-game asset insurance."
-                    type="gaming-esports"
-                  />
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-8">
+              {insuranceCards[selectedCategory]?.map((card, index) => (
+                <div
+                  key={`${selectedCategory}-${index}`}
+                  className="transition-all duration-300 opacity-100 translate-y-0"
+                >
+                  <InsuranceCard {...card} />
                 </div>
-              </TabsContent>
-
-              <TabsContent value="personal" className="mt-6">
-                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                  <InsuranceCard
-                    icon={<Heart className="h-8 w-8 text-primary" />}
-                    title="Health Insurance"
-                    description="Decentralized medical records and usage-based premiums with DeFi health savings."
-                    type="health"
-                  />
-                  <InsuranceCard
-                    icon={<Users className="h-8 w-8 text-primary" />}
-                    title="Life Insurance"
-                    description="Blockchain-based life policies with automatic execution and cryptocurrency death benefits."
-                    type="life"
-                  />
-                  <InsuranceCard
-                    icon={<Plane className="h-8 w-8 text-primary" />}
-                    title="Travel Insurance"
-                    description="Flight delay compensation and lost luggage coverage with automatic claims processing."
-                    type="travel"
-                  />
-                  <InsuranceCard
-                    icon={<Dog className="h-8 w-8 text-primary" />}
-                    title="Pet Insurance"
-                    description="Smart pet insurance with trackable health data and automatic claims."
-                    type="pet"
-                  />
-                  <InsuranceCard
-                    icon={<Umbrella className="h-8 w-8 text-primary" />}
-                    title="Travel & Leisure Insurance"
-                    description="Adventure sports coverage and travel theft insurance with automatic claims."
-                    type="travel-leisure"
-                  />
+              ))}
                 </div>
-              </TabsContent>
-
-              <TabsContent value="property" className="mt-6">
-                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                  <InsuranceCard
-                    icon={<Home className="h-8 w-8 text-primary" />}
-                    title="Home Insurance"
-                    description="Smart home integration with IoT sensors for automatic damage detection and claims."
-                    type="home"
-                  />
-                  <InsuranceCard
-                    icon={<Car className="h-8 w-8 text-primary" />}
-                    title="Car Insurance"
-                    description="Smart telematics-based claims and pay-per-mile options with automatic payouts via blockchain."
-                    type="car"
-                  />
-                  <InsuranceCard
-                    icon={<Cloud className="h-8 w-8 text-primary" />}
-                    title="Disaster Relief Insurance"
-                    description="Natural disaster coverage with community-based insurance pools."
-                    type="disaster-relief"
-                  />
-                </div>
-              </TabsContent>
-
-              <TabsContent value="business" className="mt-6">
-                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                  <InsuranceCard
-                    icon={<Briefcase className="h-8 w-8 text-primary" />}
-                    title="Business Insurance"
-                    description="Smart contracts for employee benefits and supply chain insurance with automatic claims."
-                    type="business"
-                  />
-                  <InsuranceCard
-                    icon={<Calendar className="h-8 w-8 text-primary" />}
-                    title="Event Insurance"
-                    description="Coverage for event cancellations or disruptions with automatic refunds."
-                    type="event"
-                  />
-                  <InsuranceCard
-                    icon={<Leaf className="h-8 w-8 text-primary" />}
-                    title="Agricultural Insurance"
-                    description="Crop and livestock insurance with automatic claims based on weather data."
-                    type="agricultural"
-                  />
-                  <InsuranceCard
-                    icon={<FileText className="h-8 w-8 text-primary" />}
-                    title="Intellectual Property Insurance"
-                    description="Patent protection and copyright insurance with automatic legal fee coverage."
-                    type="intellectual-property"
-                  />
-                  <InsuranceCard
-                    icon={<Leaf className="h-8 w-8 text-primary" />}
-                    title="Carbon Credit Insurance"
-                    description="Environmental damage insurance for carbon offset efforts."
-                    type="carbon-credit"
-                  />
-                </div>
-              </TabsContent>
-            </Tabs>
           </div>
         </section>
 
