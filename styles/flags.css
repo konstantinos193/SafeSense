@@ -1,0 +1,25 @@
+.flag {
+  width: 20px;
+  height: 15px;
+  display: inline-block;
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  margin-right: 8px;
+}
+
+/* Common language flags */
+.flag-us { background-image: url('https://flagcdn.com/w20/us.png'); }
+.flag-cn { background-image: url('https://flagcdn.com/w20/cn.png'); }
+.flag-es { background-image: url('https://flagcdn.com/w20/es.png'); }
+.flag-in { background-image: url('https://flagcdn.com/w20/in.png'); }
+.flag-pt { background-image: url('https://flagcdn.com/w20/pt.png'); }
+.flag-bd { background-image: url('https://flagcdn.com/w20/bd.png'); }
+.flag-ru { background-image: url('https://flagcdn.com/w20/ru.png'); }
+.flag-jp { background-image: url('https://flagcdn.com/w20/jp.png'); }
+.flag-sa { background-image: url('https://flagcdn.com/w20/sa.png'); }
+.flag-fr { background-image: url('https://flagcdn.com/w20/fr.png'); }
+.flag-de { background-image: url('https://flagcdn.com/w20/de.png'); }
+.flag-gr { background-image: url('https://flagcdn.com/w20/gr.png'); }
+
+/* Add more flags as needed */ 
