@@ -10,8 +10,32 @@ import { AuthProvider } from '@/contexts/AuthContext'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'SafeSense - Secure Your Crypto Assets',
-  description: 'Protect your digital investments with comprehensive crypto insurance solutions.',
+  title: 'SafeSense',
+  description: 'Revolutionizing insurance with blockchain technology. Safesense offers transparent, secure, and efficient coverage for the digital age.',
+  icons: {
+    icon: '/favicon.png',
+  },
+  openGraph: {
+    type: 'website',
+    url: 'safe-sense.vercel.ap', // Update with your actual domain
+    title: 'SafeSense',
+    description: 'Revolutionizing insurance with blockchain technology. Safesense offers transparent, secure, and efficient coverage for the digital age.',
+    siteName: 'SafeSense',
+    images: [
+      {
+        url: 'https://i.postimg.cc/QNwbwm44/Safe-Sense-1.png', // Update with your actual image URL
+        width: 1500,
+        height: 500,
+        alt: 'SafeSense',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'SafeSense - Secure Your Crypto Assets',
+    description: 'Revolutionizing insurance with blockchain technology. Safesense offers transparent, secure, and efficient coverage for the digital age.',
+    images: ['https://i.postimg.cc/QNwbwm44/Safe-Sense-1.png'], // Update with your actual image URL
+  },
 }
 
 export default function RootLayout({
@@ -21,7 +45,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <head />
+      <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="canonical" href="safe-sense.vercel.app" /> {/* Update with your actual domain */}
+        <meta name="robots" content="index, follow" />
+      </head>
       <body className={inter.className}>
         <ThemeProvider
           attribute="class"
