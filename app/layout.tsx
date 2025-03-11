@@ -5,6 +5,7 @@ import '@/styles/flags.css'
 import { ThemeProvider } from '@/components/theme-provider'
 import { LanguageProvider } from "@/components/language-provider"
 import { LoadingOverlay } from "@/components/loading-overlay"
+import { AuthProvider } from '@/contexts/AuthContext'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -29,8 +30,10 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <LanguageProvider>
-            <LoadingOverlay />
-            {children}
+            <AuthProvider>
+              <LoadingOverlay />
+              {children}
+            </AuthProvider>
           </LanguageProvider>
         </ThemeProvider>
       </body>

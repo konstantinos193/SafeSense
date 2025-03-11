@@ -1,9 +1,124 @@
+"use client"
+
 import Link from "next/link"
 import { Shield, Search, BarChart3, Users, Mail } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
+import { FAQAccordion } from "@/app/components/FAQAccordion"
+
+const faqCategories = {
+  general: [
+    {
+      question: "What is SafeSense?",
+      answer: "SafeSense is a blockchain-powered insurance platform that offers a wide range of insurance products for both traditional and digital assets. We leverage blockchain technology to provide transparent policies, automatic claims processing, and flexible payment options. Our mission is to make insurance more efficient, transparent, and accessible to everyone."
+    },
+    {
+      question: "How is SafeSense different from traditional insurance?",
+      answer: "SafeSense differs from traditional insurance in several key ways: Smart contracts automatically process and pay claims when verified conditions are met, eliminating lengthy manual claims processes. All policy terms are stored on the blockchain, ensuring complete transparency and preventing unilateral changes. You can pay premiums and receive claims in cryptocurrency or traditional currency. Usage-based pricing models that use real-time data to offer fairer premiums. Global accessibility without geographic restrictions or banking limitations."
+    },
+    {
+      question: "What types of insurance do you offer?",
+      answer: "We offer a comprehensive range of insurance products, including: Crypto Insurance (wallet protection, exchange coverage, DeFi protocol insurance), Traditional Insurance (car, home, health, life, travel), Business Insurance (employee benefits, supply chain, cybersecurity), Digital Asset Insurance (NFTs, tokenized real estate, gaming assets), Parametric Insurance (weather, flight delays, market events). Visit our Insurance page to explore all categories."
+    },
+    {
+      question: "How do I get started with SafeSense?",
+      answer: "Getting started with SafeSense is simple: Visit our Get Coverage page, Select the insurance category that fits your needs, Customize your coverage options and limits, Complete the application with your information, Choose your payment method (crypto or traditional), Receive your policy as a smart contract on the blockchain. The entire process typically takes less than 10 minutes, and your coverage begins immediately upon payment."
+    },
+    {
+      question: "Is SafeSense available worldwide?",
+      answer: "Yes, SafeSense is available globally. Because we operate on the blockchain, we can provide insurance services to anyone with an internet connection, regardless of their location. However, some specific insurance types may have regional limitations due to local regulations. When you apply for coverage, we'll let you know if there are any restrictions that apply to your location."
+    }
+  ],
+  blockchain: [
+    {
+      question: "How does blockchain-based insurance work?",
+      answer: "Blockchain-based insurance works by using smart contracts to automate policy management and claims processing: Your policy is created as a smart contract on the blockchain with clearly defined terms and conditions. Premium payments are made to the smart contract, which holds the funds in escrow. Data oracles continuously monitor for covered events (e.g., flight delays, weather events, crypto hacks). When a covered event is verified, the smart contract automatically executes the claim payment. Funds are transferred directly to your wallet or account without manual intervention. This process eliminates paperwork, reduces administrative costs, and ensures that claims are processed quickly and fairly."
+    },
+    {
+      question: "What is a smart contract?",
+      answer: "A smart contract is a self-executing program stored on the blockchain that automatically enforces the terms of an agreement when predetermined conditions are met. In the context of insurance: Smart contracts contain all the terms and conditions of your insurance policy. They automatically collect premiums and process claims based on verified data. They cannot be altered without mutual consent, ensuring transparency and trust. They eliminate the need for intermediaries, reducing costs and increasing efficiency. Think of a smart contract as a digital agreement that automatically enforces itself without requiring trust in a third party."
+    },
+    {
+      question: "What are data oracles and how do they work?",
+      answer: "Data oracles are services that connect blockchain smart contracts with real-world data. They act as bridges between the blockchain and external information sources. In our insurance platform: Oracles pull data from trusted sources like weather services, flight databases, IoT devices, and financial markets. They verify this data through multiple sources to ensure accuracy. The verified data is then fed to smart contracts to trigger claim payments when covered events occur. We use decentralized oracles to prevent manipulation and ensure reliability. For example, in our flight delay insurance, oracles monitor global flight databases in real-time. If your flight is delayed beyond the covered threshold, the oracle feeds this information to your policy's smart contract, which automatically processes your claim."
+    },
+    {
+      question: "Do I need to understand blockchain technology to use SafeSense?",
+      answer: "No, you don't need to understand blockchain technology to use SafeSense. We've designed our platform to be user-friendly for everyone, regardless of their technical knowledge. Our interface is similar to traditional insurance websites, but with the added benefits of blockchain technology working behind the scenes. If you choose to pay with cryptocurrency, you'll need a basic understanding of how to use a crypto wallet, but we provide detailed guides to help you through this process. If you prefer, you can always use traditional payment methods like credit cards or bank transfers."
+    },
+    {
+      question: "Is my data secure on the blockchain?",
+      answer: "Yes, your data is secure on the blockchain. We use a combination of public and private blockchain technology to ensure both transparency and privacy: Policy terms and claim events are stored on the blockchain in a transparent but anonymized way. Personal information is encrypted and stored off-chain with secure access controls. We use zero-knowledge proofs for sensitive data like health information, allowing verification without revealing the actual data. All transactions are cryptographically secured and immutable. Our approach ensures that your policy details are transparent and verifiable while keeping your personal information private and secure."
+    }
+  ],
+  coverage: [
+    {
+      question: "What assets can I insure with SafeSense?",
+      answer: "SafeSense offers insurance for a wide range of traditional and digital assets: Digital Assets: Cryptocurrencies, NFTs, DeFi investments, tokenized assets, in-game items. Physical Assets: Homes, vehicles, personal belongings, business equipment. Personal Protection: Health, life, travel, event cancellation. Business Assets: Intellectual property, supply chains, employee benefits, cyber security. If you have a specific asset that's not listed here, please contact us to discuss custom coverage options."
+    },
+    {
+      question: "How are coverage limits determined?",
+      answer: "Coverage limits are determined based on several factors: The value of the asset being insured. The type and level of risk associated with the asset. Your selected plan (Basic, Premium, or Enterprise). Your coverage history and risk profile. Market conditions and risk pool capacity. You can select your desired coverage limit during the application process, and our system will calculate the appropriate premium based on the factors above. For high-value assets or custom coverage needs, our Enterprise plan offers flexible limits tailored to your specific requirements."
+    },
+    {
+      question: "What is parametric insurance and how does it work?",
+      answer: "Parametric insurance is a type of insurance that automatically pays out a fixed amount when certain predefined parameters or triggers are met, without requiring you to file a claim or prove actual losses. Unlike traditional insurance that pays based on the actual loss incurred, parametric insurance pays a predetermined amount when a triggering event occurs, regardless of the actual damage. This makes claims processing instant and transparent. For example: Weather Insurance: Automatic payout if rainfall exceeds 6 inches in 24 hours in your area. Flight Delay Insurance: Fixed compensation if your flight is delayed by more than 2 hours. Crypto Market Insurance: Predetermined payout if a cryptocurrency drops more than 20% in 24 hours. Parametric insurance is ideal for situations where quick liquidity is important and when the occurrence of an event is easily verifiable through objective data sources. Learn more on our Parametric Insurance page."
+    },
+    {
+      question: "Are there any exclusions to coverage?",
+      answer: "Yes, like all insurance products, our policies have certain exclusions. These vary by insurance type but typically include: Intentional acts or fraud. Pre-existing conditions (for health insurance). Known vulnerabilities that weren't addressed (for cyber and crypto insurance). War, terrorism, and certain natural disasters (unless specifically covered). Losses due to illegal activities. The key difference with SafeSense is that all exclusions are clearly coded into the smart contract and visible to you before purchase. There are no hidden exclusions or surprise denials. When you view a policy, you'll see exactly what is and isn't covered in plain language."
+    },
+    {
+      question: "Can I customize my coverage?",
+      answer: "Yes, SafeSense offers highly customizable coverage options. During the application process, you can: Select specific assets to cover. Choose coverage limits that fit your needs. Add or remove specific perils and risks. Set deductible amounts. Choose between different coverage triggers (for parametric insurance). Our Premium and Enterprise plans offer greater customization options. Enterprise customers can work with our team to create completely bespoke coverage solutions tailored to their unique needs. As you customize your coverage, our system provides real-time premium calculations so you can see exactly how your choices affect your costs."
+    }
+  ],
+  claims: [
+    {
+      question: "How do I file a claim?",
+      answer: "Many claims are processed automatically through our smart contract system when verified data confirms a covered event. For these automatic claims, you don't need to do anything – the payment is sent directly to your designated account or wallet. For claims that require additional verification: Log into your SafeSense account dashboard. Navigate to the 'Claims' section. Select the policy for which you're filing a claim. Follow the guided process to provide details about the incident. Upload any required documentation (photos, reports, etc.). Submit your claim for review. Our team reviews manual claims promptly, typically within 24-48 hours. You can track the status of your claim in real-time through your dashboard."
+    },
+    {
+      question: "How quickly are claims processed?",
+      answer: "Claim processing times vary based on the type of claim: Automatic Claims: Processed instantly when verified data confirms a covered event. Payment is typically received within minutes to hours, depending on the payment method. Parametric Claims: Processed automatically when the parameter threshold is met, usually within minutes to hours. Manual Claims: Typically reviewed within 24-48 hours of submission. Once approved, payment is processed immediately. Complex Claims: Claims requiring extensive investigation may take 3-5 business days, but we keep you updated throughout the process. Our blockchain-based system eliminates many of the delays associated with traditional insurance claims processing, allowing us to provide much faster resolutions than conventional insurers."
+    },
+    {
+      question: "What documentation do I need to provide for a claim?",
+      answer: "The documentation required depends on the type of insurance and the nature of the claim: Automatic Claims: No documentation needed – these are verified through data oracles. Crypto Insurance: Transaction hashes, wallet addresses, and details of the incident. Property Insurance: Photos of damage, repair estimates, police reports (if applicable). Health Insurance: Medical records, treatment details, and provider information. Travel Insurance: Booking confirmations, cancellation notices, and expense receipts. Our claims system will guide you through exactly what documentation is needed for your specific claim. We've designed the process to be as streamlined as possible, requesting only essential information."
+    },
+    {
+      question: "How are claim amounts determined?",
+      answer: "Claim amounts are determined differently based on the type of insurance: Parametric Insurance: Fixed payout amounts predetermined in the policy when specific triggers are met. Indemnity Insurance: Based on the actual loss incurred, up to the coverage limit, minus any applicable deductible. Crypto Insurance: Based on the verified value of assets at the time of loss, using multiple price oracles for accuracy. Health Insurance: Based on the actual cost of covered medical services, subject to policy limits and network agreements. All claim calculations are transparent and follow the exact formulas specified in your policy's smart contract. There are no hidden adjustments or subjective assessments that could reduce your payout."
+    },
+    {
+      question: "What if my claim is denied?",
+      answer: "If your claim is denied, you'll receive a detailed explanation of the reason for the denial, with reference to the specific policy terms that apply. Unlike traditional insurance, our blockchain-based policies have clear, unambiguous terms that are applied consistently. If you believe your claim was incorrectly denied, you have several options: Appeal Process: Submit an appeal through your dashboard with any additional information or documentation that supports your claim. Dispute Resolution: Access our decentralized dispute resolution system, where independent arbitrators review your case. Customer Support: Contact our support team who can help explain the decision and guide you through next steps. Our goal is to make claims decisions fair and transparent. The immutable nature of blockchain means that all policy terms and claim decisions are recorded permanently and can be independently verified."
+    }
+  ],
+  payments: [
+    {
+      question: "What payment methods do you accept?",
+      answer: "We accept a wide range of payment methods to accommodate all customers: Cryptocurrencies: Bitcoin (BTC), Ethereum (ETH), and major stablecoins (USDC, USDT, DAI). Traditional Methods: Credit/debit cards, bank transfers, and ACH payments. Mobile Payments: Apple Pay, Google Pay, and other major mobile payment platforms. Cryptocurrency payments often result in lower fees and faster processing times for both premiums and claims. We offer a 5% discount on premiums paid with cryptocurrency to reflect these savings."
+    },
+    {
+      question: "How are premiums calculated?",
+      answer: "Premiums are calculated based on several factors: The value of assets being insured. The specific risks being covered. Historical data and risk models. Real-time risk assessment from connected devices and data sources. Your coverage history and risk profile. The deductible amount you choose. For certain insurance types like car or health insurance, we can use data from connected devices to offer usage-based pricing that rewards safe behavior with lower premiums. For example, our car insurance can use telematics data to offer discounts for safe driving habits. Our premium calculations are transparent, and you can see how different factors affect your rate during the quote process."
+    },
+    {
+      question: "Are there any discounts available?",
+      answer: "Yes, we offer several discounts to help you save on premiums: Cryptocurrency Payment Discount: 5% off when you pay with cryptocurrency. Annual Payment Discount: 10% off when you pay annually instead of monthly. Multi-Policy Discount: 15% off when you insure multiple assets or categories. Safety Measures Discount: Up to 20% off for implementing security measures (varies by insurance type). Usage-Based Discounts: Variable discounts based on data from connected devices showing lower risk. Discounts are automatically applied during the quote process when you qualify. You can see all available discounts and how they affect your premium in real-time as you customize your coverage."
+    },
+    {
+      question: "How do cryptocurrency payments work?",
+      answer: "Paying with cryptocurrency is simple and secure: During checkout, select your preferred cryptocurrency (BTC, ETH, USDC, etc.). We generate a unique payment address for your transaction. Send the exact amount from your wallet to the provided address. The blockchain confirms your payment (typically within minutes). Your policy is automatically activated once payment is confirmed. For recurring payments, you can: Set up automatic payments through compatible crypto wallets. Receive payment reminders before each due date. Use stablecoins to avoid price volatility concerns. All cryptocurrency transactions are processed through secure, audited payment gateways with industry-standard security measures. We support both on-chain and Layer 2 transactions to accommodate different fee preferences."
+    },
+    {
+      question: "How do claim payments work?",
+      answer: "Claim payments are processed according to your preferences: Cryptocurrency: Payments sent directly to your designated wallet address. Bank Transfer: Funds transferred to your linked bank account. Credit/Debit Card: Refunds to your original payment method. Digital Wallets: Payments to services like PayPal or Venmo. For automatic claims (like parametric insurance), payments are processed immediately when the triggering event is verified, without requiring any action from you. For manual claims, payments are processed as soon as the claim is approved. Cryptocurrency payments are typically the fastest option, often arriving within minutes of claim approval. Traditional payment methods may take 1-3 business days depending on your financial institution."
+    }
+  ]
+}
 
 export default function FAQPage() {
   return (
@@ -81,659 +196,19 @@ export default function FAQPage() {
                 <TabsTrigger value="payments">Payments</TabsTrigger>
               </TabsList>
 
-              <TabsContent value="general" className="mt-6">
-                <Accordion type="single" collapsible className="w-full">
-                  <AccordionItem value="item-1">
-                    <AccordionTrigger>What is SafeSense?</AccordionTrigger>
-                    <AccordionContent>
-                      SafeSense is a blockchain-powered insurance platform that offers a wide range of insurance
-                      products for both traditional and digital assets. We leverage blockchain technology to provide
-                      transparent policies, automatic claims processing, and flexible payment options. Our mission is to
-                      make insurance more efficient, transparent, and accessible to everyone.
-                    </AccordionContent>
-                  </AccordionItem>
-
-                  <AccordionItem value="item-2">
-                    <AccordionTrigger>How is SafeSense different from traditional insurance?</AccordionTrigger>
-                    <AccordionContent>
-                      <p>SafeSense differs from traditional insurance in several key ways:</p>
-                      <ul className="list-disc pl-6 mt-2 space-y-1">
-                        <li>
-                          Smart contracts automatically process and pay claims when verified conditions are met,
-                          eliminating lengthy manual claims processes
-                        </li>
-                        <li>
-                          All policy terms are stored on the blockchain, ensuring complete transparency and preventing
-                          unilateral changes
-                        </li>
-                        <li>You can pay premiums and receive claims in cryptocurrency or traditional currency</li>
-                        <li>Usage-based pricing models that use real-time data to offer fairer premiums</li>
-                        <li>Global accessibility without geographic restrictions or banking limitations</li>
-                      </ul>
-                    </AccordionContent>
-                  </AccordionItem>
-
-                  <AccordionItem value="item-3">
-                    <AccordionTrigger>What types of insurance do you offer?</AccordionTrigger>
-                    <AccordionContent>
-                      <p>We offer a comprehensive range of insurance products, including:</p>
-                      <ul className="list-disc pl-6 mt-2 space-y-1">
-                        <li>Crypto Insurance (wallet protection, exchange coverage, DeFi protocol insurance)</li>
-                        <li>Traditional Insurance (car, home, health, life, travel)</li>
-                        <li>Business Insurance (employee benefits, supply chain, cybersecurity)</li>
-                        <li>Digital Asset Insurance (NFTs, tokenized real estate, gaming assets)</li>
-                        <li>Parametric Insurance (weather, flight delays, market events)</li>
-                      </ul>
-                      <p className="mt-2">
-                        Visit our{" "}
-                        <Link href="/insurance" className="text-primary hover:underline">
-                          Insurance page
-                        </Link>{" "}
-                        to explore all categories.
-                      </p>
-                    </AccordionContent>
-                  </AccordionItem>
-
-                  <AccordionItem value="item-4">
-                    <AccordionTrigger>How do I get started with SafeSense?</AccordionTrigger>
-                    <AccordionContent>
-                      <p>Getting started with SafeSense is simple:</p>
-                      <ol className="list-decimal pl-6 mt-2 space-y-1">
-                        <li>
-                          Visit our{" "}
-                          <Link href="/get-coverage" className="text-primary hover:underline">
-                            Get Coverage
-                          </Link>{" "}
-                          page
-                        </li>
-                        <li>Select the insurance category that fits your needs</li>
-                        <li>Customize your coverage options and limits</li>
-                        <li>Complete the application with your information</li>
-                        <li>Choose your payment method (crypto or traditional)</li>
-                        <li>Receive your policy as a smart contract on the blockchain</li>
-                      </ol>
-                      <p className="mt-2">
-                        The entire process typically takes less than 10 minutes, and your coverage begins immediately
-                        upon payment.
-                      </p>
-                    </AccordionContent>
-                  </AccordionItem>
-
-                  <AccordionItem value="item-5">
-                    <AccordionTrigger>Is SafeSense available worldwide?</AccordionTrigger>
-                    <AccordionContent>
-                      <p>
-                        Yes, SafeSense is available globally. Because we operate on the blockchain, we can provide
-                        insurance services to anyone with an internet connection, regardless of their location. However,
-                        some specific insurance types may have regional limitations due to local regulations. When you
-                        apply for coverage, we'll let you know if there are any restrictions that apply to your
-                        location.
-                      </p>
-                    </AccordionContent>
-                  </AccordionItem>
-                </Accordion>
-              </TabsContent>
-
-              <TabsContent value="blockchain" className="mt-6">
-                <Accordion type="single" collapsible className="w-full">
-                  <AccordionItem value="item-1">
-                    <AccordionTrigger>How does blockchain-based insurance work?</AccordionTrigger>
-                    <AccordionContent>
-                      <p>
-                        Blockchain-based insurance works by using smart contracts to automate policy management and
-                        claims processing:
-                      </p>
-                      <ol className="list-decimal pl-6 mt-2 space-y-1">
-                        <li>
-                          Your policy is created as a smart contract on the blockchain with clearly defined terms and
-                          conditions
-                        </li>
-                        <li>Premium payments are made to the smart contract, which holds the funds in escrow</li>
-                        <li>
-                          Data oracles continuously monitor for covered events (e.g., flight delays, weather events,
-                          crypto hacks)
-                        </li>
-                        <li>
-                          When a covered event is verified, the smart contract automatically executes the claim payment
-                        </li>
-                        <li>Funds are transferred directly to your wallet or account without manual intervention</li>
-                      </ol>
-                      <p className="mt-2">
-                        This process eliminates paperwork, reduces administrative costs, and ensures that claims are
-                        processed quickly and fairly.
-                      </p>
-                    </AccordionContent>
-                  </AccordionItem>
-
-                  <AccordionItem value="item-2">
-                    <AccordionTrigger>What is a smart contract?</AccordionTrigger>
-                    <AccordionContent>
-                      <p>
-                        A smart contract is a self-executing program stored on the blockchain that automatically
-                        enforces the terms of an agreement when predetermined conditions are met. In the context of
-                        insurance:
-                      </p>
-                      <ul className="list-disc pl-6 mt-2 space-y-1">
-                        <li>Smart contracts contain all the terms and conditions of your insurance policy</li>
-                        <li>They automatically collect premiums and process claims based on verified data</li>
-                        <li>They cannot be altered without mutual consent, ensuring transparency and trust</li>
-                        <li>They eliminate the need for intermediaries, reducing costs and increasing efficiency</li>
-                      </ul>
-                      <p className="mt-2">
-                        Think of a smart contract as a digital agreement that automatically enforces itself without
-                        requiring trust in a third party.
-                      </p>
-                    </AccordionContent>
-                  </AccordionItem>
-
-                  <AccordionItem value="item-3">
-                    <AccordionTrigger>What are data oracles and how do they work?</AccordionTrigger>
-                    <AccordionContent>
-                      <p>
-                        Data oracles are services that connect blockchain smart contracts with real-world data. They act
-                        as bridges between the blockchain and external information sources. In our insurance platform:
-                      </p>
-                      <ul className="list-disc pl-6 mt-2 space-y-1">
-                        <li>
-                          Oracles pull data from trusted sources like weather services, flight databases, IoT devices,
-                          and financial markets
-                        </li>
-                        <li>They verify this data through multiple sources to ensure accuracy</li>
-                        <li>
-                          The verified data is then fed to smart contracts to trigger claim payments when covered events
-                          occur
-                        </li>
-                        <li>We use decentralized oracles to prevent manipulation and ensure reliability</li>
-                      </ul>
-                      <p className="mt-2">
-                        For example, in our flight delay insurance, oracles monitor global flight databases in
-                        real-time. If your flight is delayed beyond the covered threshold, the oracle feeds this
-                        information to your policy's smart contract, which automatically processes your claim.
-                      </p>
-                    </AccordionContent>
-                  </AccordionItem>
-
-                  <AccordionItem value="item-4">
-                    <AccordionTrigger>Do I need to understand blockchain technology to use SafeSense?</AccordionTrigger>
-                    <AccordionContent>
-                      <p>
-                        No, you don't need to understand blockchain technology to use SafeSense. We've designed our
-                        platform to be user-friendly for everyone, regardless of their technical knowledge. Our
-                        interface is similar to traditional insurance websites, but with the added benefits of
-                        blockchain technology working behind the scenes.
-                      </p>
-                      <p className="mt-2">
-                        If you choose to pay with cryptocurrency, you'll need a basic understanding of how to use a
-                        crypto wallet, but we provide detailed guides to help you through this process. If you prefer,
-                        you can always use traditional payment methods like credit cards or bank transfers.
-                      </p>
-                    </AccordionContent>
-                  </AccordionItem>
-
-                  <AccordionItem value="item-5">
-                    <AccordionTrigger>Is my data secure on the blockchain?</AccordionTrigger>
-                    <AccordionContent>
-                      <p>
-                        Yes, your data is secure on the blockchain. We use a combination of public and private
-                        blockchain technology to ensure both transparency and privacy:
-                      </p>
-                      <ul className="list-disc pl-6 mt-2 space-y-1">
-                        <li>
-                          Policy terms and claim events are stored on the blockchain in a transparent but anonymized way
-                        </li>
-                        <li>Personal information is encrypted and stored off-chain with secure access controls</li>
-                        <li>
-                          We use zero-knowledge proofs for sensitive data like health information, allowing verification
-                          without revealing the actual data
-                        </li>
-                        <li>All transactions are cryptographically secured and immutable</li>
-                      </ul>
-                      <p className="mt-2">
-                        Our approach ensures that your policy details are transparent and verifiable while keeping your
-                        personal information private and secure.
-                      </p>
-                    </AccordionContent>
-                  </AccordionItem>
-                </Accordion>
-              </TabsContent>
-
-              <TabsContent value="coverage" className="mt-6">
-                <Accordion type="single" collapsible className="w-full">
-                  <AccordionItem value="item-1">
-                    <AccordionTrigger>What assets can I insure with SafeSense?</AccordionTrigger>
-                    <AccordionContent>
-                      <p>SafeSense offers insurance for a wide range of traditional and digital assets:</p>
-                      <ul className="list-disc pl-6 mt-2 space-y-1">
-                        <li>
-                          <strong>Digital Assets:</strong> Cryptocurrencies, NFTs, DeFi investments, tokenized assets,
-                          in-game items
-                        </li>
-                        <li>
-                          <strong>Physical Assets:</strong> Homes, vehicles, personal belongings, business equipment
-                        </li>
-                        <li>
-                          <strong>Personal Protection:</strong> Health, life, travel, event cancellation
-                        </li>
-                        <li>
-                          <strong>Business Assets:</strong> Intellectual property, supply chains, employee benefits,
-                          cyber security
-                        </li>
-                      </ul>
-                      <p className="mt-2">
-                        If you have a specific asset that's not listed here, please{" "}
-                        <Link href="/#contact" className="text-primary hover:underline">
-                          contact us
-                        </Link>{" "}
-                        to discuss custom coverage options.
-                      </p>
-                    </AccordionContent>
-                  </AccordionItem>
-
-                  <AccordionItem value="item-2">
-                    <AccordionTrigger>How are coverage limits determined?</AccordionTrigger>
-                    <AccordionContent>
-                      <p>Coverage limits are determined based on several factors:</p>
-                      <ul className="list-disc pl-6 mt-2 space-y-1">
-                        <li>The value of the asset being insured</li>
-                        <li>The type and level of risk associated with the asset</li>
-                        <li>Your selected plan (Basic, Premium, or Enterprise)</li>
-                        <li>Your coverage history and risk profile</li>
-                        <li>Market conditions and risk pool capacity</li>
-                      </ul>
-                      <p className="mt-2">
-                        You can select your desired coverage limit during the application process, and our system will
-                        calculate the appropriate premium based on the factors above. For high-value assets or custom
-                        coverage needs, our Enterprise plan offers flexible limits tailored to your specific
-                        requirements.
-                      </p>
-                    </AccordionContent>
-                  </AccordionItem>
-
-                  <AccordionItem value="item-3">
-                    <AccordionTrigger>What is parametric insurance and how does it work?</AccordionTrigger>
-                    <AccordionContent>
-                      <p>
-                        Parametric insurance is a type of insurance that automatically pays out a fixed amount when
-                        certain predefined parameters or triggers are met, without requiring you to file a claim or
-                        prove actual losses.
-                      </p>
-                      <p className="mt-2">
-                        Unlike traditional insurance that pays based on the actual loss incurred, parametric insurance
-                        pays a predetermined amount when a triggering event occurs, regardless of the actual damage.
-                        This makes claims processing instant and transparent.
-                      </p>
-                      <p className="mt-2">For example:</p>
-                      <ul className="list-disc pl-6 mt-2 space-y-1">
-                        <li>
-                          <strong>Weather Insurance:</strong> Automatic payout if rainfall exceeds 6 inches in 24 hours
-                          in your area
-                        </li>
-                        <li>
-                          <strong>Flight Delay Insurance:</strong> Fixed compensation if your flight is delayed by more
-                          than 2 hours
-                        </li>
-                        <li>
-                          <strong>Crypto Market Insurance:</strong> Predetermined payout if a cryptocurrency drops more
-                          than 20% in 24 hours
-                        </li>
-                      </ul>
-                      <p className="mt-2">
-                        Parametric insurance is ideal for situations where quick liquidity is important and when the
-                        occurrence of an event is easily verifiable through objective data sources.
-                      </p>
-                      <p className="mt-2">
-                        Learn more on our{" "}
-                        <Link href="/insurance/parametric" className="text-primary hover:underline">
-                          Parametric Insurance page
-                        </Link>
-                        .
-                      </p>
-                    </AccordionContent>
-                  </AccordionItem>
-
-                  <AccordionItem value="item-4">
-                    <AccordionTrigger>Are there any exclusions to coverage?</AccordionTrigger>
-                    <AccordionContent>
-                      <p>
-                        Yes, like all insurance products, our policies have certain exclusions. These vary by insurance
-                        type but typically include:
-                      </p>
-                      <ul className="list-disc pl-6 mt-2 space-y-1">
-                        <li>Intentional acts or fraud</li>
-                        <li>Pre-existing conditions (for health insurance)</li>
-                        <li>Known vulnerabilities that weren't addressed (for cyber and crypto insurance)</li>
-                        <li>War, terrorism, and certain natural disasters (unless specifically covered)</li>
-                        <li>Losses due to illegal activities</li>
-                      </ul>
-                      <p className="mt-2">
-                        The key difference with SafeSense is that all exclusions are clearly coded into the smart
-                        contract and visible to you before purchase. There are no hidden exclusions or surprise denials.
-                        When you view a policy, you'll see exactly what is and isn't covered in plain language.
-                      </p>
-                    </AccordionContent>
-                  </AccordionItem>
-
-                  <AccordionItem value="item-5">
-                    <AccordionTrigger>Can I customize my coverage?</AccordionTrigger>
-                    <AccordionContent>
-                      <p>
-                        Yes, SafeSense offers highly customizable coverage options. During the application process, you
-                        can:
-                      </p>
-                      <ul className="list-disc pl-6 mt-2 space-y-1">
-                        <li>Select specific assets to cover</li>
-                        <li>Choose coverage limits that fit your needs</li>
-                        <li>Add or remove specific perils and risks</li>
-                        <li>Set deductible amounts</li>
-                        <li>Choose between different coverage triggers (for parametric insurance)</li>
-                      </ul>
-                      <p className="mt-2">
-                        Our Premium and Enterprise plans offer greater customization options. Enterprise customers can
-                        work with our team to create completely bespoke coverage solutions tailored to their unique
-                        needs.
-                      </p>
-                      <p className="mt-2">
-                        As you customize your coverage, our system provides real-time premium calculations so you can
-                        see exactly how your choices affect your costs.
-                      </p>
-                    </AccordionContent>
-                  </AccordionItem>
-                </Accordion>
-              </TabsContent>
-
-              <TabsContent value="claims" className="mt-6">
-                <Accordion type="single" collapsible className="w-full">
-                  <AccordionItem value="item-1">
-                    <AccordionTrigger>How do I file a claim?</AccordionTrigger>
-                    <AccordionContent>
-                      <p>
-                        Many claims are processed automatically through our smart contract system when verified data
-                        confirms a covered event. For these automatic claims, you don't need to do anything – the
-                        payment is sent directly to your designated account or wallet.
-                      </p>
-                      <p className="mt-2">For claims that require additional verification:</p>
-                      <ol className="list-decimal pl-6 mt-2 space-y-1">
-                        <li>Log into your SafeSense account dashboard</li>
-                        <li>Navigate to the "Claims" section</li>
-                        <li>Select the policy for which you're filing a claim</li>
-                        <li>Follow the guided process to provide details about the incident</li>
-                        <li>Upload any required documentation (photos, reports, etc.)</li>
-                        <li>Submit your claim for review</li>
-                      </ol>
-                      <p className="mt-2">
-                        Our team reviews manual claims promptly, typically within 24-48 hours. You can track the status
-                        of your claim in real-time through your dashboard.
-                      </p>
-                    </AccordionContent>
-                  </AccordionItem>
-
-                  <AccordionItem value="item-2">
-                    <AccordionTrigger>How quickly are claims processed?</AccordionTrigger>
-                    <AccordionContent>
-                      <p>Claim processing times vary based on the type of claim:</p>
-                      <ul className="list-disc pl-6 mt-2 space-y-1">
-                        <li>
-                          <strong>Automatic Claims:</strong> Processed instantly when verified data confirms a covered
-                          event. Payment is typically received within minutes to hours, depending on the payment method.
-                        </li>
-                        <li>
-                          <strong>Parametric Claims:</strong> Processed automatically when the parameter threshold is
-                          met, usually within minutes to hours.
-                        </li>
-                        <li>
-                          <strong>Manual Claims:</strong> Typically reviewed within 24-48 hours of submission. Once
-                          approved, payment is processed immediately.
-                        </li>
-                        <li>
-                          <strong>Complex Claims:</strong> Claims requiring extensive investigation may take 3-5
-                          business days, but we keep you updated throughout the process.
-                        </li>
-                      </ul>
-                      <p className="mt-2">
-                        Our blockchain-based system eliminates many of the delays associated with traditional insurance
-                        claims processing, allowing us to provide much faster resolutions than conventional insurers.
-                      </p>
-                    </AccordionContent>
-                  </AccordionItem>
-
-                  <AccordionItem value="item-3">
-                    <AccordionTrigger>What documentation do I need to provide for a claim?</AccordionTrigger>
-                    <AccordionContent>
-                      <p>The documentation required depends on the type of insurance and the nature of the claim:</p>
-                      <ul className="list-disc pl-6 mt-2 space-y-1">
-                        <li>
-                          <strong>Automatic Claims:</strong> No documentation needed – these are verified through data
-                          oracles.
-                        </li>
-                        <li>
-                          <strong>Crypto Insurance:</strong> Transaction hashes, wallet addresses, and details of the
-                          incident.
-                        </li>
-                        <li>
-                          <strong>Property Insurance:</strong> Photos of damage, repair estimates, police reports (if
-                          applicable).
-                        </li>
-                        <li>
-                          <strong>Health Insurance:</strong> Medical records, treatment details, and provider
-                          information.
-                        </li>
-                        <li>
-                          <strong>Travel Insurance:</strong> Booking confirmations, cancellation notices, and expense
-                          receipts.
-                        </li>
-                      </ul>
-                      <p className="mt-2">
-                        Our claims system will guide you through exactly what documentation is needed for your specific
-                        claim. We've designed the process to be as streamlined as possible, requesting only essential
-                        information.
-                      </p>
-                    </AccordionContent>
-                  </AccordionItem>
-
-                  <AccordionItem value="item-4">
-                    <AccordionTrigger>How are claim amounts determined?</AccordionTrigger>
-                    <AccordionContent>
-                      <p>Claim amounts are determined differently based on the type of insurance:</p>
-                      <ul className="list-disc pl-6 mt-2 space-y-1">
-                        <li>
-                          <strong>Parametric Insurance:</strong> Fixed payout amounts predetermined in the policy when
-                          specific triggers are met.
-                        </li>
-                        <li>
-                          <strong>Indemnity Insurance:</strong> Based on the actual loss incurred, up to the coverage
-                          limit, minus any applicable deductible.
-                        </li>
-                        <li>
-                          <strong>Crypto Insurance:</strong> Based on the verified value of assets at the time of loss,
-                          using multiple price oracles for accuracy.
-                        </li>
-                        <li>
-                          <strong>Health Insurance:</strong> Based on the actual cost of covered medical services,
-                          subject to policy limits and network agreements.
-                        </li>
-                      </ul>
-                      <p className="mt-2">
-                        All claim calculations are transparent and follow the exact formulas specified in your policy's
-                        smart contract. There are no hidden adjustments or subjective assessments that could reduce your
-                        payout.
-                      </p>
-                    </AccordionContent>
-                  </AccordionItem>
-
-                  <AccordionItem value="item-5">
-                    <AccordionTrigger>What if my claim is denied?</AccordionTrigger>
-                    <AccordionContent>
-                      <p>
-                        If your claim is denied, you'll receive a detailed explanation of the reason for the denial,
-                        with reference to the specific policy terms that apply. Unlike traditional insurance, our
-                        blockchain-based policies have clear, unambiguous terms that are applied consistently.
-                      </p>
-                      <p className="mt-2">
-                        If you believe your claim was incorrectly denied, you have several options:
-                      </p>
-                      <ol className="list-decimal pl-6 mt-2 space-y-1">
-                        <li>
-                          <strong>Appeal Process:</strong> Submit an appeal through your dashboard with any additional
-                          information or documentation that supports your claim.
-                        </li>
-                        <li>
-                          <strong>Dispute Resolution:</strong> Access our decentralized dispute resolution system, where
-                          independent arbitrators review your case.
-                        </li>
-                        <li>
-                          <strong>Customer Support:</strong> Contact our support team who can help explain the decision
-                          and guide you through next steps.
-                        </li>
-                      </ol>
-                      <p className="mt-2">
-                        Our goal is to make claims decisions fair and transparent. The immutable nature of blockchain
-                        means that all policy terms and claim decisions are recorded permanently and can be
-                        independently verified.
-                      </p>
-                    </AccordionContent>
-                  </AccordionItem>
-                </Accordion>
-              </TabsContent>
-
-              <TabsContent value="payments" className="mt-6">
-                <Accordion type="single" collapsible className="w-full">
-                  <AccordionItem value="item-1">
-                    <AccordionTrigger>What payment methods do you accept?</AccordionTrigger>
-                    <AccordionContent>
-                      <p>We accept a wide range of payment methods to accommodate all customers:</p>
-                      <ul className="list-disc pl-6 mt-2 space-y-1">
-                        <li>
-                          <strong>Cryptocurrencies:</strong> Bitcoin (BTC), Ethereum (ETH), and major stablecoins (USDC,
-                          USDT, DAI)
-                        </li>
-                        <li>
-                          <strong>Traditional Methods:</strong> Credit/debit cards, bank transfers, and ACH payments
-                        </li>
-                        <li>
-                          <strong>Mobile Payments:</strong> Apple Pay, Google Pay, and other major mobile payment
-                          platforms
-                        </li>
-                      </ul>
-                      <p className="mt-2">
-                        Cryptocurrency payments often result in lower fees and faster processing times for both premiums
-                        and claims. We offer a 5% discount on premiums paid with cryptocurrency to reflect these
-                        savings.
-                      </p>
-                    </AccordionContent>
-                  </AccordionItem>
-
-                  <AccordionItem value="item-2">
-                    <AccordionTrigger>How are premiums calculated?</AccordionTrigger>
-                    <AccordionContent>
-                      <p>Premiums are calculated based on several factors:</p>
-                      <ul className="list-disc pl-6 mt-2 space-y-1">
-                        <li>The value of assets being insured</li>
-                        <li>The specific risks being covered</li>
-                        <li>Historical data and risk models</li>
-                        <li>Real-time risk assessment from connected devices and data sources</li>
-                        <li>Your coverage history and risk profile</li>
-                        <li>The deductible amount you choose</li>
-                      </ul>
-                      <p className="mt-2">
-                        For certain insurance types like car or health insurance, we can use data from connected devices
-                        to offer usage-based pricing that rewards safe behavior with lower premiums. For example, our
-                        car insurance can use telematics data to offer discounts for safe driving habits.
-                      </p>
-                      <p className="mt-2">
-                        Our premium calculations are transparent, and you can see how different factors affect your rate
-                        during the quote process.
-                      </p>
-                    </AccordionContent>
-                  </AccordionItem>
-
-                  <AccordionItem value="item-3">
-                    <AccordionTrigger>Are there any discounts available?</AccordionTrigger>
-                    <AccordionContent>
-                      <p>Yes, we offer several discounts to help you save on premiums:</p>
-                      <ul className="list-disc pl-6 mt-2 space-y-1">
-                        <li>
-                          <strong>Cryptocurrency Payment Discount:</strong> 5% off when you pay with cryptocurrency
-                        </li>
-                        <li>
-                          <strong>Annual Payment Discount:</strong> 10% off when you pay annually instead of monthly
-                        </li>
-                        <li>
-                          <strong>Multi-Policy Discount:</strong> 15% off when you insure multiple assets or categories
-                        </li>
-                        <li>
-                          <strong>Safety Measures Discount:</strong> Up to 20% off for implementing security measures
-                          (varies by insurance type)
-                        </li>
-                        <li>
-                          <strong>Usage-Based Discounts:</strong> Variable discounts based on data from connected
-                          devices showing lower risk
-                        </li>
-                      </ul>
-                      <p className="mt-2">
-                        Discounts are automatically applied during the quote process when you qualify. You can see all
-                        available discounts and how they affect your premium in real-time as you customize your
-                        coverage.
-                      </p>
-                    </AccordionContent>
-                  </AccordionItem>
-
-                  <AccordionItem value="item-4">
-                    <AccordionTrigger>How do cryptocurrency payments work?</AccordionTrigger>
-                    <AccordionContent>
-                      <p>Paying with cryptocurrency is simple and secure:</p>
-                      <ol className="list-decimal pl-6 mt-2 space-y-1">
-                        <li>During checkout, select your preferred cryptocurrency (BTC, ETH, USDC, etc.)</li>
-                        <li>We generate a unique payment address for your transaction</li>
-                        <li>Send the exact amount from your wallet to the provided address</li>
-                        <li>The blockchain confirms your payment (typically within minutes)</li>
-                        <li>Your policy is automatically activated once payment is confirmed</li>
-                      </ol>
-                      <p className="mt-2">For recurring payments, you can:</p>
-                      <ul className="list-disc pl-6 mt-2 space-y-1">
-                        <li>Set up automatic payments through compatible crypto wallets</li>
-                        <li>Receive payment reminders before each due date</li>
-                        <li>Use stablecoins to avoid price volatility concerns</li>
-                      </ul>
-                      <p className="mt-2">
-                        All cryptocurrency transactions are processed through secure, audited payment gateways with
-                        industry-standard security measures. We support both on-chain and Layer 2 transactions to
-                        accommodate different fee preferences.
-                      </p>
-                    </AccordionContent>
-                  </AccordionItem>
-
-                  <AccordionItem value="item-5">
-                    <AccordionTrigger>How do claim payments work?</AccordionTrigger>
-                    <AccordionContent>
-                      <p>Claim payments are processed according to your preferences:</p>
-                      <ul className="list-disc pl-6 mt-2 space-y-1">
-                        <li>
-                          <strong>Cryptocurrency:</strong> Payments sent directly to your designated wallet address
-                        </li>
-                        <li>
-                          <strong>Bank Transfer:</strong> Funds transferred to your linked bank account
-                        </li>
-                        <li>
-                          <strong>Credit/Debit Card:</strong> Refunds to your original payment method
-                        </li>
-                        <li>
-                          <strong>Digital Wallets:</strong> Payments to services like PayPal or Venmo
-                        </li>
-                      </ul>
-                      <p className="mt-2">
-                        For automatic claims (like parametric insurance), payments are processed immediately when the
-                        triggering event is verified, without requiring any action from you. For manual claims, payments
-                        are processed as soon as the claim is approved.
-                      </p>
-                      <p className="mt-2">
-                        Cryptocurrency payments are typically the fastest option, often arriving within minutes of claim
-                        approval. Traditional payment methods may take 1-3 business days depending on your financial
-                        institution.
-                      </p>
-                    </AccordionContent>
-                  </AccordionItem>
-                </Accordion>
-              </TabsContent>
+              {Object.entries(faqCategories).map(([category, items]) => (
+                <TabsContent 
+                  key={category} 
+                  value={category} 
+                  className="mt-6 data-[state=inactive]:hidden data-[state=active]:animate-fadeIn"
+                >
+                  <FAQAccordion
+                    title={`${category.charAt(0).toUpperCase() + category.slice(1)} FAQs`}
+                    description={`Common questions about ${category}`}
+                    items={items}
+                  />
+                </TabsContent>
+              ))}
             </Tabs>
           </div>
         </section>

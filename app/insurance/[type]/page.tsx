@@ -1,9 +1,12 @@
+"use client"
+
 import Link from "next/link"
 import { Shield, Check, Info, AlertTriangle, Car, Heart, Home, Plane, Briefcase, Users } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
+import { useState } from "react"
 
 // Define the insurance types and their details
 const insuranceTypes = {
@@ -317,6 +320,7 @@ const insuranceTypes = {
 
 export default function InsuranceDetails({ params }) {
   const { type } = params
+  const [activeTab, setActiveTab] = useState<string | null>(null)
 
   // Check if the insurance type exists
   if (!insuranceTypes[type]) {
@@ -388,15 +392,13 @@ export default function InsuranceDetails({ params }) {
         {/* Tabs Section */}
         <section className="w-full py-12 md:py-24">
           <div className="container px-4 md:px-6">
-            <Tabs defaultValue="coverage" className="w-full">
-              <TabsList className="grid w-full grid-cols-4">
-                <TabsTrigger value="coverage">Coverage Options</TabsTrigger>
-                <TabsTrigger value="benefits">Benefits</TabsTrigger>
-                <TabsTrigger value="how-it-works">How It Works</TabsTrigger>
-                <TabsTrigger value="faq">FAQ</TabsTrigger>
-              </TabsList>
-
-              <TabsContent value="coverage" className="mt-6">
+            <Accordion type="single" collapsible className="w-full space-y-4">
+              {/* Coverage Options Accordion */}
+              <AccordionItem value="coverage">
+                <AccordionTrigger className="text-xl font-semibold">
+                  Coverage Options
+                </AccordionTrigger>
+                <AccordionContent>
                 <Card id="coverage-options">
                   <CardHeader>
                     <CardTitle>Coverage Options</CardTitle>
@@ -404,7 +406,7 @@ export default function InsuranceDetails({ params }) {
                   </CardHeader>
                   <CardContent>
                     <div className="grid gap-6 md:grid-cols-2">
-                      {insurance.coverageOptions.map((option, index) => (
+                        {insurance.coverageOptions.map((option, index) => (
                         <div key={index} className="flex items-start gap-2">
                           <div className={`p-1.5 rounded-full ${insurance.color} text-white shrink-0`}>
                             <Check className="h-4 w-4" />
@@ -422,9 +424,15 @@ export default function InsuranceDetails({ params }) {
                     </Button>
                   </CardFooter>
                 </Card>
-              </TabsContent>
+                </AccordionContent>
+              </AccordionItem>
 
-              <TabsContent value="benefits" className="mt-6">
+              {/* Benefits Accordion */}
+              <AccordionItem value="benefits">
+                <AccordionTrigger className="text-xl font-semibold">
+                  Benefits
+                </AccordionTrigger>
+                <AccordionContent>
                 <Card>
                   <CardHeader>
                     <CardTitle>Key Benefits</CardTitle>
@@ -445,9 +453,15 @@ export default function InsuranceDetails({ params }) {
                     </div>
                   </CardContent>
                 </Card>
-              </TabsContent>
+                </AccordionContent>
+              </AccordionItem>
 
-              <TabsContent value="how-it-works" className="mt-6">
+              {/* How It Works Accordion */}
+              <AccordionItem value="how-it-works">
+                <AccordionTrigger className="text-xl font-semibold">
+                  How It Works
+                </AccordionTrigger>
+                <AccordionContent>
                 <Card>
                   <CardHeader>
                     <CardTitle>How It Works</CardTitle>
@@ -475,33 +489,40 @@ export default function InsuranceDetails({ params }) {
                     </Button>
                   </CardFooter>
                 </Card>
-              </TabsContent>
-
-              <TabsContent value="faq" className="mt-6">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Frequently Asked Questions</CardTitle>
-                    <CardDescription>Common questions about {insurance.title.toLowerCase()}</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <Accordion type="single" collapsible className="w-full">
-                      {insurance.faqs.map((faq, index) => (
-                        <AccordionItem key={index} value={`item-${index}`}>
-                          <AccordionTrigger>{faq.question}</AccordionTrigger>
-                          <AccordionContent>{faq.answer}</AccordionContent>
+                </AccordionContent>
                         </AccordionItem>
-                      ))}
-                    </Accordion>
-                  </CardContent>
-                  <CardFooter className="flex flex-col items-start gap-2">
-                    <p className="text-sm text-muted-foreground">Don't see your question? Contact our support team.</p>
-                    <Button variant="outline" asChild>
-                      <Link href="#contact">Contact Support</Link>
-                    </Button>
-                  </CardFooter>
-                </Card>
-              </TabsContent>
-            </Tabs>
+
+              {/* FAQ Accordion */}
+              <AccordionItem value="faq">
+                <AccordionTrigger className="text-xl font-semibold">
+                  FAQ
+                </AccordionTrigger>
+                <AccordionContent>
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Frequently Asked Questions</CardTitle>
+                      <CardDescription>Common questions about {insurance.title.toLowerCase()}</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <Accordion type="single" collapsible className="w-full">
+                        {insurance.faqs.map((faq, index) => (
+                          <AccordionItem key={index} value={`item-${index}`}>
+                            <AccordionTrigger>{faq.question}</AccordionTrigger>
+                            <AccordionContent>{faq.answer}</AccordionContent>
+                          </AccordionItem>
+                        ))}
+                      </Accordion>
+                    </CardContent>
+                    <CardFooter className="flex flex-col items-start gap-2">
+                      <p className="text-sm text-muted-foreground">Don't see your question? Contact our support team.</p>
+                      <Button variant="outline" asChild>
+                        <Link href="#contact">Contact Support</Link>
+                      </Button>
+                    </CardFooter>
+                  </Card>
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
           </div>
         </section>
 

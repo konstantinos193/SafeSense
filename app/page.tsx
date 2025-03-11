@@ -137,11 +137,18 @@ export default function Home() {
               </Link>
               <LanguageSelector />
               <ThemeToggle />
-              <Link href="/get-coverage">
-                <Button>
-                  <TranslatedText text="Get Started" />
-                </Button>
-              </Link>
+              <div className="flex items-center gap-2">
+                <Link href="/auth/login">
+                  <Button variant="ghost">
+                    <TranslatedText text="Sign In" />
+                  </Button>
+                </Link>
+                <Link href="/auth/register">
+                  <Button>
+                    <TranslatedText text="Get Started" />
+                  </Button>
+                </Link>
+              </div>
             </nav>
           </div>
         </div>
@@ -600,7 +607,7 @@ export default function Home() {
             <TranslatedText text="© 2025 SafeSense. All rights reserved." />
           </p>
           <div className="flex gap-4">
-            <Link href="#" className="text-sm text-muted-foreground underline-offset-4 hover:underline">
+            <Link href="/terms" className="text-sm text-muted-foreground underline-offset-4 hover:underline">
               <TranslatedText text="Terms" />
             </Link>
             <Link href="#" className="text-sm text-muted-foreground underline-offset-4 hover:underline">
