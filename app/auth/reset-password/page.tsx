@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { supabase } from "@/lib/supabase"
 
 export default function ResetPasswordPage() {
   const router = useRouter()
@@ -18,10 +19,8 @@ export default function ResetPasswordPage() {
   const [error, setError] = useState("")
   const [success, setSuccess] = useState("")
   const [showPassword, setShowPassword] = useState(false)
-  const [formData, setFormData] = useState({
-    password: "",
-    confirmPassword: "",
-  })
+  const [password, setPassword] = useState("")
+  const [confirmPassword, setConfirmPassword] = useState("")
 
   // Get token from URL
   const token = searchParams.get("token")
@@ -57,30 +56,16 @@ export default function ResetPasswordPage() {
     validateToken()
   }, [token])
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target
-    setFormData({
-      ...formData,
-      [name]: value,
-    })
-  }
-
-  const handleSubmit = async (e) => {
+  const handleResetPassword = async (e: React.FormEvent) => {
     e.preventDefault()
     setError("")
-    setSuccess("")
 
-    if (!formData.password || !formData.confirmPassword) {
-      setError("All fields are required")
-      return
-    }
-
-    if (formData.password !== formData.confirmPassword) {
+    if (password !== confirmPassword) {
       setError("Passwords do not match")
       return
     }
 
-    if (formData.password.length < 8) {
+    if (password.length < 8) {
       setError("Password must be at least 8 characters long")
       return
     }
@@ -88,31 +73,32 @@ export default function ResetPasswordPage() {
     setIsLoading(true)
 
     try {
-      // Call the API endpoint
-      const response = await fetch("/users/reset-password", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          token,
-          password: formData.password,
-        }),
+      const { error: updateError } = await supabase.auth.updateUser({
+        password: password
       })
 
-      if (!response.ok) {
-        const errorData = await response.json()
-        throw new Error(errorData.message || "Failed to reset password")
+      if (updateError) throw updateError
+
+      // If there's a wallet address, update the profile
+      const walletAddress = searchParams.get('wallet')
+      if (walletAddress) {
+        const { data: { user } } = await supabase.auth.getUser()
+        if (user) {
+          await supabase
+            .from('profiles')
+            .update({
+              wallet_address: walletAddress,
+              updated_at: new Date().toISOString()
+            })
+            .eq('id', user.id)
+        }
       }
 
-      setSuccess("Password has been reset successfully")
-
-      // Redirect to login page after successful password reset
-      setTimeout(() => {
-        router.push("/auth/login")
-      }, 3000)
-    } catch (err) {
-      setError(err.message || "An error occurred. Please try again later.")
+      // Redirect to login
+      router.push('/auth/login?reset=success')
+    } catch (err: any) {
+      console.error("Reset password error:", err)
+      setError(err.message || "Failed to reset password")
     } finally {
       setIsLoading(false)
     }
@@ -176,7 +162,7 @@ export default function ResetPasswordPage() {
               </Card>
             ) : (
               <Card>
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={handleResetPassword}>
                   <CardHeader>
                     <CardTitle>Create New Password</CardTitle>
                     <CardDescription>Enter and confirm your new password</CardDescription>
@@ -190,8 +176,8 @@ export default function ResetPasswordPage() {
                           name="password"
                           type={showPassword ? "text" : "password"}
                           placeholder="••••••••"
-                          value={formData.password}
-                          onChange={handleInputChange}
+                          value={password}
+                          onChange={(e) => setPassword(e.target.value)}
                           required
                         />
                         <Button
@@ -215,8 +201,8 @@ export default function ResetPasswordPage() {
                           name="confirmPassword"
                           type={showPassword ? "text" : "password"}
                           placeholder="••••••••"
-                          value={formData.confirmPassword}
-                          onChange={handleInputChange}
+                          value={confirmPassword}
+                          onChange={(e) => setConfirmPassword(e.target.value)}
                           required
                         />
                       </div>
@@ -224,7 +210,7 @@ export default function ResetPasswordPage() {
                   </CardContent>
                   <CardFooter className="flex flex-col space-y-4">
                     <Button type="submit" className="w-full" disabled={isLoading || success}>
-                      {isLoading ? "Resetting Password..." : "Reset Password"}
+                      {isLoading ? "Updating..." : "Update Password"}
                     </Button>
                     <div className="text-center text-sm">
                       <Link href="/auth/login" className="text-primary hover:underline">

@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { Shield, Check, Info, AlertTriangle, Car, Heart, Home, Plane, Briefcase, Users } from "lucide-react"
+import { Shield, Check, Info, AlertTriangle, Car, Heart, Home, Plane, Briefcase, Users, Image, Lock, Gamepad2, Calendar, Leaf, Coins, Gamepad, Dog, Cloud, FileKey } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -314,6 +314,617 @@ const insuranceTypes = {
         question: "Can I purchase insurance after booking my trip?",
         answer:
           "Yes, you can purchase travel insurance anytime before your departure date. However, for maximum coverage benefits including trip cancellation protection, we recommend purchasing insurance within 14 days of your initial trip deposit.",
+      },
+    ],
+  },
+  nft: {
+    title: "NFT Insurance",
+    description: "Protect your digital art and collectibles with comprehensive NFT coverage",
+    icon: <Image className="h-8 w-8" />,
+    color: "bg-indigo-500",
+    coverageOptions: [
+      "NFT Theft Protection",
+      "Smart Contract Vulnerability Coverage",
+      "Marketplace Transaction Insurance",
+      "Fraudulent Sale Protection",
+      "Authentication Coverage",
+      "Gas Fee Protection for Failed Transactions",
+    ],
+    benefits: [
+      "Instant verification of NFT ownership",
+      "Automatic claims processing via smart contracts",
+      "Coverage across major NFT marketplaces",
+      "Protection against smart contract exploits",
+      "Real-time monitoring of NFT transfers",
+    ],
+    howItWorks: [
+      "Connect your wallet to verify NFT ownership",
+      "Select the NFTs you want to insure",
+      "Choose your coverage amount based on floor price or last sale",
+      "Pay premium in crypto or stablecoins",
+      "Receive coverage confirmation as an NFT",
+      "Automatic claim processing if theft or loss occurs",
+    ],
+    faqs: [
+      {
+        question: "What types of NFTs are covered?",
+        answer: "We cover NFTs from verified collections on major marketplaces including OpenSea, Rarible, and Foundation. Both ERC-721 and ERC-1155 tokens are eligible for coverage.",
+      },
+      {
+        question: "How is the coverage amount determined?",
+        answer: "Coverage amounts can be based on the floor price, last sale price, or appraised value of your NFT. We use oracle networks to maintain accurate, real-time valuations.",
+      },
+      {
+        question: "What happens if my NFT is stolen?",
+        answer: "Our system monitors blockchain activity 24/7. If unauthorized transfers are detected, we initiate immediate recovery procedures and process compensation claims within 48 hours.",
+      },
+      {
+        question: "Are gas fees covered?",
+        answer: "Yes, we cover gas fees for failed transactions and provide reimbursement for excessive gas fees during high network congestion periods.",
+      },
+    ],
+  },
+  defi: {
+    title: "DeFi Protocol Insurance",
+    description: "Secure your DeFi investments against smart contract risks and protocol failures",
+    icon: <Lock className="h-8 w-8" />,
+    color: "bg-blue-600",
+    coverageOptions: [
+      "Smart Contract Vulnerability Coverage",
+      "Protocol Hack Protection",
+      "Stablecoin De-peg Insurance",
+      "Liquidity Pool Protection",
+      "Governance Attack Coverage",
+      "Flash Loan Attack Protection",
+    ],
+    benefits: [
+      "Real-time monitoring of protocol health",
+      "Automatic claim processing for covered events",
+      "Multi-chain coverage options",
+      "Customizable coverage limits",
+      "Immediate payout in stablecoins",
+    ],
+    howItWorks: [
+      "Select the DeFi protocols you want to insure",
+      "Choose coverage amount for each protocol",
+      "Connect wallet for position verification",
+      "Set up automatic premium payments",
+      "Monitor your coverage through our dashboard",
+      "Receive instant payouts for verified incidents",
+    ],
+    faqs: [
+      {
+        question: "Which DeFi protocols are covered?",
+        answer: "We cover major DeFi protocols including Uniswap, Aave, Compound, Curve, and more. Coverage availability is based on protocol audit status and security measures.",
+      },
+      {
+        question: "How are claims verified?",
+        answer: "Claims are verified through a combination of smart contract monitoring, oracle networks, and our security partner network. Verified incidents trigger automatic payouts.",
+      },
+      {
+        question: "What is stablecoin de-peg protection?",
+        answer: "This coverage protects against stablecoin value dropping below a specified threshold (typically $0.95) for an extended period. Compensation is based on your holding amount.",
+      },
+      {
+        question: "Are impermanent losses covered?",
+        answer: "Standard policies don't cover impermanent loss, but we offer specialized LP protection that can cover significant impermanent loss events under specific conditions.",
+      },
+    ],
+  },
+  gaming: {
+    title: "Gaming & Esports Insurance",
+    description: "Protect your in-game assets and esports investments",
+    icon: <Gamepad2 className="h-8 w-8" />,
+    color: "bg-pink-600",
+    coverageOptions: [
+      "In-Game Asset Protection",
+      "Tournament Prize Pool Insurance",
+      "Stream Revenue Protection",
+      "Gaming Equipment Coverage",
+      "Account Hack Protection",
+      "Virtual Land and Property Insurance",
+    ],
+    benefits: [
+      "Coverage for multiple gaming platforms",
+      "Real-time asset value tracking",
+      "Instant claim verification",
+      "Cross-game coverage options",
+      "Professional esports team coverage",
+    ],
+    howItWorks: [
+      "Connect your gaming accounts",
+      "Select assets and activities to insure",
+      "Choose coverage levels for each category",
+      "Set up premium payments",
+      "Receive coverage confirmation",
+      "Submit claims through our gaming portal",
+    ],
+    faqs: [
+      {
+        question: "What games are covered?",
+        answer: "We cover major blockchain games, traditional MMOs, and esports titles. Coverage varies by game and asset type.",
+      },
+      {
+        question: "How are in-game assets valued?",
+        answer: "Asset values are determined using marketplace data, rarity metrics, and historical sales data specific to each game.",
+      },
+      {
+        question: "Is tournament coverage available for teams?",
+        answer: "Yes, we offer specialized coverage for esports teams including prize pool protection and player contract insurance.",
+      },
+      {
+        question: "What types of streaming revenue are covered?",
+        answer: "We cover revenue loss due to platform outages, account hacks, and other disruptions to professional gaming streams.",
+      },
+    ],
+  },
+  event: {
+    title: "Event Insurance",
+    description: "Comprehensive coverage for events of all sizes",
+    icon: <Calendar className="h-8 w-8" />,
+    color: "bg-yellow-600",
+    coverageOptions: [
+      "Event Cancellation Coverage",
+      "Weather-related Disruption",
+      "Vendor No-show Protection",
+      "Property Damage Coverage",
+      "Liability Insurance",
+      "Virtual Event Technical Failure",
+    ],
+    benefits: [
+      "Weather monitoring integration",
+      "Real-time vendor tracking",
+      "Automatic claim processing",
+      "Flexible coverage options",
+      "Multi-venue protection",
+    ],
+    howItWorks: [
+      "Provide event details and requirements",
+      "Select coverage types needed",
+      "Choose coverage period and limits",
+      "Receive instant quote and policy",
+      "Monitor event status through dashboard",
+      "Submit claims with digital documentation",
+    ],
+    faqs: [
+      {
+        question: "What types of events are covered?",
+        answer: "We cover corporate events, conferences, weddings, concerts, and more. Both in-person and virtual events are eligible.",
+      },
+      {
+        question: "How does weather coverage work?",
+        answer: "We use weather data APIs to monitor conditions. If specified weather parameters are breached, claims are automatically processed.",
+      },
+      {
+        question: "Is COVID-19 related cancellation covered?",
+        answer: "Coverage for pandemic-related cancellations is available as an optional add-on with specific terms and conditions.",
+      },
+      {
+        question: "What's included in virtual event coverage?",
+        answer: "We cover technical failures, platform outages, cyber attacks, and other disruptions that affect virtual event delivery.",
+      },
+    ],
+  },
+  agricultural: {
+    title: "Agricultural Insurance",
+    description: "Smart contract-based crop and livestock protection",
+    icon: <Leaf className="h-8 w-8" />,
+    color: "bg-green-600",
+    coverageOptions: [
+      "Crop Yield Protection",
+      "Weather Risk Coverage",
+      "Livestock Insurance",
+      "Equipment Breakdown",
+      "Supply Chain Disruption",
+      "Smart Farming System Failure",
+    ],
+    benefits: [
+      "Satellite data integration",
+      "IoT sensor monitoring",
+      "Automated weather tracking",
+      "Blockchain-verified claims",
+      "Parametric insurance options",
+    ],
+    howItWorks: [
+      "Register farm location and assets",
+      "Select crops or livestock to insure",
+      "Choose coverage types and limits",
+      "Connect IoT devices if available",
+      "Monitor conditions via dashboard",
+      "Receive automatic payouts for covered events",
+    ],
+    faqs: [
+      {
+        question: "How is crop yield calculated?",
+        answer: "We use a combination of satellite imagery, weather data, and IoT sensors to monitor crop health and predict yields.",
+      },
+      {
+        question: "What weather events are covered?",
+        answer: "Coverage includes drought, excessive rainfall, frost, hail, and other extreme weather events that affect crop yield.",
+      },
+      {
+        question: "How does livestock tracking work?",
+        answer: "We integrate with RFID tags and IoT sensors to monitor livestock health and location in real-time.",
+      },
+      {
+        question: "Are organic farming practices covered?",
+        answer: "Yes, we offer specialized coverage for organic farming with additional protection for certification-related risks.",
+      },
+    ],
+  },
+  "tokenized-asset": {
+    title: "Tokenized Asset Insurance",
+    description: "Protect your tokenized real-world assets and securities",
+    icon: <Coins className="h-8 w-8" />,
+    color: "bg-violet-600",
+    coverageOptions: [
+      "Real Estate Token Protection",
+      "Security Token Coverage",
+      "Asset-Backed Token Insurance",
+      "Fractional Ownership Protection",
+      "Smart Contract Vulnerability Coverage",
+      "Regulatory Compliance Protection",
+    ],
+    benefits: [
+      "24/7 asset monitoring",
+      "Cross-chain coverage",
+      "Regulatory compliance support",
+      "Automated value tracking",
+      "Instant claim verification",
+    ],
+    howItWorks: [
+      "Connect your wallet holding tokenized assets",
+      "Select assets to insure",
+      "Choose coverage levels based on asset value",
+      "Set up automated premium payments",
+      "Monitor your coverage through our dashboard",
+      "Receive instant claim processing",
+    ],
+    faqs: [
+      {
+        question: "What types of tokenized assets are covered?",
+        answer: "We cover real estate tokens, security tokens, asset-backed tokens, and other regulated tokenized assets.",
+      },
+      {
+        question: "How are tokenized assets valued?",
+        answer: "Assets are valued using a combination of real-world asset prices, oracle networks, and market data.",
+      },
+      {
+        question: "Is regulatory compliance included?",
+        answer: "Yes, we provide coverage for regulatory compliance issues and help ensure your tokenized assets meet legal requirements.",
+      },
+      {
+        question: "What happens if the underlying asset is compromised?",
+        answer: "Our coverage includes protection for both the token and the underlying asset, with comprehensive claim processing.",
+      },
+    ],
+  },
+  "gaming-esports": {
+    title: "Gaming & Esports Insurance",
+    description: "Comprehensive coverage for gaming assets and esports operations",
+    icon: <Gamepad className="h-8 w-8" />,
+    color: "bg-fuchsia-600",
+    coverageOptions: [
+      "Professional Player Insurance",
+      "Tournament Organization Coverage",
+      "Gaming Asset Protection",
+      "Stream Revenue Insurance",
+      "Team Organization Coverage",
+      "Gaming Infrastructure Protection",
+    ],
+    benefits: [
+      "Global tournament coverage",
+      "Real-time asset monitoring",
+      "Revenue protection",
+      "Equipment coverage",
+      "Team liability protection",
+    ],
+    howItWorks: [
+      "Select your gaming or esports category",
+      "Choose specific coverage needs",
+      "Upload relevant documentation",
+      "Receive customized coverage plan",
+      "Access real-time monitoring dashboard",
+      "File claims through our gaming portal",
+    ],
+    faqs: [
+      {
+        question: "What's covered under player insurance?",
+        answer: "Coverage includes injury protection, contract insurance, and performance-related issues.",
+      },
+      {
+        question: "How do you handle tournament cancellations?",
+        answer: "We provide compensation for verified tournament cancellations, including prize pool protection.",
+      },
+      {
+        question: "Is streaming equipment covered?",
+        answer: "Yes, we cover professional gaming and streaming equipment against damage, theft, and malfunction.",
+      },
+      {
+        question: "What about team organizations?",
+        answer: "We offer comprehensive coverage for esports organizations, including liability, property, and employee protection.",
+      },
+    ],
+  },
+  life: {
+    title: "Life Insurance",
+    description: "Smart contract-enabled life insurance with instant claim processing",
+    icon: <Heart className="h-8 w-8" />,
+    color: "bg-red-600",
+    coverageOptions: [
+      "Term Life Insurance",
+      "Whole Life Coverage",
+      "Critical Illness Protection",
+      "Disability Coverage",
+      "Family Protection Plans",
+      "Investment-Linked Policies",
+    ],
+    benefits: [
+      "Instant claim processing",
+      "Blockchain-verified policies",
+      "Flexible coverage options",
+      "Investment opportunities",
+      "Family security guarantees",
+    ],
+    howItWorks: [
+      "Complete digital health assessment",
+      "Choose coverage type and amount",
+      "Add optional riders and benefits",
+      "Set up premium payments",
+      "Receive digital policy contract",
+      "Beneficiaries receive automatic payouts",
+    ],
+    faqs: [
+      {
+        question: "How are claims verified?",
+        answer: "We use a combination of official records and smart contracts for automated claim verification.",
+      },
+      {
+        question: "Can I modify my coverage?",
+        answer: "Yes, you can adjust your coverage and add riders through our digital platform.",
+      },
+      {
+        question: "How are beneficiaries paid?",
+        answer: "Beneficiaries can receive payments in traditional currency or cryptocurrency.",
+      },
+      {
+        question: "What's included in critical illness coverage?",
+        answer: "We cover major illnesses with automated payouts based on verified medical records.",
+      },
+    ],
+  },
+  pet: {
+    title: "Pet Insurance",
+    description: "Digital-first pet protection with IoT integration",
+    icon: <Dog className="h-8 w-8" />,
+    color: "bg-amber-600",
+    coverageOptions: [
+      "Veterinary Care Coverage",
+      "Accident Protection",
+      "Chronic Condition Care",
+      "Pet Tracking Insurance",
+      "Third-Party Liability",
+      "Wellness & Preventive Care",
+    ],
+    benefits: [
+      "24/7 vet telemedicine access",
+      "Smart collar integration",
+      "Automated claim processing",
+      "Preventive care rewards",
+      "Digital pet health records",
+    ],
+    howItWorks: [
+      "Register your pet with digital records",
+      "Choose coverage level",
+      "Connect pet tracking devices",
+      "Set up automated payments",
+      "Access vet services through our network",
+      "Receive instant claim approvals",
+    ],
+    faqs: [
+      {
+        question: "What pets are covered?",
+        answer: "We cover dogs, cats, and other common pets with specialized plans for exotic pets.",
+      },
+      {
+        question: "How do smart collars work with insurance?",
+        answer: "Smart collars help track pet health metrics and location, potentially reducing premiums.",
+      },
+      {
+        question: "Is preventive care included?",
+        answer: "Yes, we offer wellness plans covering routine care and preventive treatments.",
+      },
+      {
+        question: "How quickly are vet bills paid?",
+        answer: "Direct vet payments are processed instantly through our network.",
+      },
+    ],
+  },
+  "disaster-relief": {
+    title: "Disaster Relief Insurance",
+    description: "Parametric insurance for natural disasters with immediate aid",
+    icon: <Cloud className="h-8 w-8" />,
+    color: "bg-sky-600",
+    coverageOptions: [
+      "Natural Disaster Coverage",
+      "Emergency Evacuation",
+      "Property Damage Protection",
+      "Business Interruption",
+      "Community Relief Support",
+      "Recovery Assistance",
+    ],
+    benefits: [
+      "Instant parametric payouts",
+      "Satellite monitoring",
+      "Emergency response coordination",
+      "Community support network",
+      "Rebuilding assistance",
+    ],
+    howItWorks: [
+      "Select coverage area and risks",
+      "Choose coverage amounts",
+      "Set up monitoring parameters",
+      "Receive early warning alerts",
+      "Get automatic payouts post-disaster",
+      "Access recovery support network",
+    ],
+    faqs: [
+      {
+        question: "How are disasters verified?",
+        answer: "We use satellite data, weather stations, and official reports for automated verification.",
+      },
+      {
+        question: "How quickly are claims paid?",
+        answer: "Parametric claims are paid within 24-48 hours of event verification.",
+      },
+      {
+        question: "What disasters are covered?",
+        answer: "Coverage includes earthquakes, floods, hurricanes, wildfires, and other natural disasters.",
+      },
+      {
+        question: "Is evacuation assistance included?",
+        answer: "Yes, we provide evacuation coordination and coverage for verified disasters.",
+      },
+    ],
+  },
+  "intellectual-property": {
+    title: "Intellectual Property Insurance",
+    description: "Blockchain-verified IP protection and enforcement",
+    icon: <FileKey className="h-8 w-8" />,
+    color: "bg-emerald-600",
+    coverageOptions: [
+      "Patent Protection",
+      "Copyright Coverage",
+      "Trademark Defense",
+      "IP Infringement Protection",
+      "Licensing Dispute Coverage",
+      "Digital Rights Management",
+    ],
+    benefits: [
+      "Blockchain IP verification",
+      "Global coverage network",
+      "Automated infringement detection",
+      "Legal defense coverage",
+      "Licensing revenue protection",
+    ],
+    howItWorks: [
+      "Register your IP on our platform",
+      "Select coverage types",
+      "Set up monitoring parameters",
+      "Receive infringement alerts",
+      "Access legal support network",
+      "File claims for verified violations",
+    ],
+    faqs: [
+      {
+        question: "What types of IP are covered?",
+        answer: "We cover patents, copyrights, trademarks, and trade secrets across digital and physical domains.",
+      },
+      {
+        question: "How do you detect infringement?",
+        answer: "We use AI and blockchain technology to monitor and detect potential IP infringements.",
+      },
+      {
+        question: "Is legal representation included?",
+        answer: "Yes, we provide access to a network of IP attorneys and cover legal defense costs.",
+      },
+      {
+        question: "How are claims validated?",
+        answer: "Claims are validated through our blockchain verification system and legal expert review.",
+      },
+    ],
+  },
+  "carbon-credit": {
+    title: "Carbon Credit Insurance",
+    description: "Protect your carbon credit investments and trading",
+    icon: <Leaf className="h-8 w-8" />,
+    color: "bg-lime-600",
+    coverageOptions: [
+      "Carbon Credit Verification",
+      "Trading Risk Coverage",
+      "Project Development Insurance",
+      "Regulatory Compliance",
+      "Market Value Protection",
+      "Offset Project Insurance",
+    ],
+    benefits: [
+      "Real-time credit tracking",
+      "Automated verification",
+      "Market price protection",
+      "Regulatory compliance support",
+      "Project risk mitigation",
+    ],
+    howItWorks: [
+      "Register carbon credit portfolio",
+      "Select coverage options",
+      "Connect to verification systems",
+      "Monitor credits in real-time",
+      "Receive market alerts",
+      "Process automated claims",
+    ],
+    faqs: [
+      {
+        question: "What types of credits are covered?",
+        answer: "We cover verified carbon credits from recognized registries and emerging market credits.",
+      },
+      {
+        question: "How are credits verified?",
+        answer: "Credits are verified through blockchain and recognized carbon credit registries.",
+      },
+      {
+        question: "Is project failure covered?",
+        answer: "Yes, we provide coverage for verified project failures and underperformance.",
+      },
+      {
+        question: "How are price fluctuations handled?",
+        answer: "We offer market value protection for significant price fluctuations in carbon markets.",
+      },
+    ],
+  },
+  "travel-leisure": {
+    title: "Travel & Leisure Insurance",
+    description: "Comprehensive coverage for all your travel and leisure activities",
+    icon: <Plane className="h-8 w-8" />,
+    color: "bg-cyan-600",
+    coverageOptions: [
+      "Vacation Package Protection",
+      "Adventure Sports Coverage",
+      "Cruise Insurance",
+      "Hotel Booking Protection",
+      "Activity Cancellation Coverage",
+      "Luxury Travel Insurance",
+    ],
+    benefits: [
+      "Global coverage network",
+      "24/7 travel assistance",
+      "Real-time travel alerts",
+      "Instant claim processing",
+      "Multi-trip annual options",
+    ],
+    howItWorks: [
+      "Select your travel activities",
+      "Choose coverage duration",
+      "Add specific activities or trips",
+      "Receive digital policy instantly",
+      "Access travel support services",
+      "Submit claims through mobile app",
+    ],
+    faqs: [
+      {
+        question: "What activities are covered?",
+        answer: "We cover a wide range of leisure activities including skiing, scuba diving, golf, cruises, and adventure sports.",
+      },
+      {
+        question: "How does luxury travel coverage work?",
+        answer: "Our luxury travel coverage includes high-value item protection, concierge services, and premium accommodation guarantees.",
+      },
+      {
+        question: "Are pre-existing conditions covered?",
+        answer: "Yes, we offer coverage options for pre-existing conditions with proper medical documentation.",
+      },
+      {
+        question: "What's included in cruise protection?",
+        answer: "Cruise protection covers trip cancellation, medical emergencies at sea, missed port departures, and cabin confinement.",
       },
     ],
   },

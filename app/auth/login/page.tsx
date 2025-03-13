@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { Shield, Mail, Wallet, ArrowRight, Check, Info, Eye, EyeOff } from 'lucide-react'
+import { Shield, Mail, Wallet, ArrowRight, Check, Info, Eye, EyeOff, Chrome as GoogleIcon, Apple as AppleIcon, MessageSquare as DiscordIcon } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -11,6 +11,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { supabase } from '@/lib/supabase'
+import Image from 'next/image'
+
+declare global {
+  interface Window {
+    ethereum?: any;
+  }
+}
 
 export default function LoginPage() {
   const router = useRouter()
@@ -30,18 +37,32 @@ export default function LoginPage() {
   const [activeTab, setActiveTab] = useState("email")
 
   useEffect(() => {
-    // Check for verification status in URL
     const params = new URLSearchParams(window.location.search)
     const verified = params.get('verified')
+    const error = params.get('error')
     
     if (verified === 'true') {
-      setSuccess('Email verified successfully! You can now log in.')
-    } else if (verified === 'false') {
-      setError('Email verification failed. Please try again or contact support.')
+      setSuccess('Email verified successfully! You can now log in with either your wallet or email.')
+    } else if (error) {
+      switch (error) {
+        case 'invalid_callback':
+          setError('Invalid verification link. Please try again.')
+          break
+        case 'callback_failed':
+          setError('Verification failed. Please try again or contact support.')
+          break
+        default:
+          setError('An error occurred during verification.')
+      }
+    }
+
+    if (error === 'wallet_account') {
+      setError("This email is linked to a wallet account. Please use the 'Wallet' tab to sign in.")
+      setActiveTab('wallet') // Automatically switch to wallet tab
     }
   }, [])
 
-  const handleEmailInputChange = (e) => {
+  const handleEmailInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
     setEmailFormData({
       ...emailFormData,
@@ -65,44 +86,44 @@ export default function LoginPage() {
     }
   }
 
-  const handleEmailLogin = async (e) => {
+  const handleEmailLogin = async (e: React.FormEvent) => {
     e.preventDefault()
     setError("")
+    setIsLoading(true)
     
     try {
-      // Log the attempt (remove in production)
-      console.log("Attempting login with email:", emailFormData.email.trim())
+      // First check if this email is linked to a wallet account
+      const { data: profileData } = await supabase
+        .from('profiles')
+        .select('wallet_address')
+        .eq('email', emailFormData.email.trim())
+        .single()
 
-      // Get current session first
-      const { data: { session } } = await supabase.auth.getSession()
-      console.log("Current session:", session)
+      if (profileData?.wallet_address) {
+        setError("This email belongs to a wallet account. Please switch to 'Wallet' tab to sign in.")
+        setIsLoading(false)
+        return
+      }
 
-      // Try to sign in
-      const { data, error } = await supabase.auth.signInWithPassword({
+      // Regular email login
+      const { error } = await supabase.auth.signInWithPassword({
         email: emailFormData.email.trim(),
         password: emailFormData.password
       })
 
       if (error) {
-        console.error("Sign in error:", error)
+        if (error.message.includes("Invalid login credentials")) {
+          throw new Error("Incorrect email or password")
+        }
         throw error
       }
 
-      console.log("Sign in successful:", data)
-      
-      // Get user after sign in
-      const { data: { user }, error: userError } = await supabase.auth.getUser()
-      console.log("User after sign in:", user)
-
-      if (userError) {
-        console.error("Get user error:", userError)
-        throw userError
-      }
-
       router.push("/dashboard")
-    } catch (err) {
-      console.error("Full error:", err)
-      setError("Invalid email or password. Please try again.")
+    } catch (err: any) {
+      console.error("Login error:", err)
+      setError(err.message || "Failed to sign in")
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -118,8 +139,9 @@ export default function LoginPage() {
       const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' })
       const address = accounts[0]
       setWalletAddress(address)
-    } catch (err) {
-      setError(err.message || "Failed to connect wallet")
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : "Failed to connect wallet"
+      setError(errorMessage)
     } finally {
       setWalletConnecting(false)
     }
@@ -210,9 +232,10 @@ export default function LoginPage() {
       }
 
       router.push("/dashboard");
-    } catch (err) {
+    } catch (err: unknown) {
       console.error("Login error:", err);
-      setError(err.message || 'Authentication failed');
+      const errorMessage = err instanceof Error ? err.message : 'Authentication failed'
+      setError(errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -220,17 +243,112 @@ export default function LoginPage() {
 
   const handleResetPassword = async () => {
     try {
-      const { error } = await supabase.auth.resetPasswordForEmail(emailFormData.email.trim(), {
-        redirectTo: `${window.location.origin}/auth/callback`,
-      });
+      if (!emailFormData.email.trim()) {
+        setError("Please enter your email address")
+        return
+      }
       
-      if (error) throw error;
+      setIsLoading(true)
+
+      // Check if this is a wallet account
+      const { data: profileData } = await supabase
+        .from('profiles')
+        .select('wallet_address')
+        .eq('email', emailFormData.email.trim())
+        .single()
+
+      if (profileData?.wallet_address) {
+        setError("This email belongs to a wallet account. Please switch to 'Wallet' tab to sign in.")
+        return
+      }
+
+      // Send password reset email
+      const { error } = await supabase.auth.resetPasswordForEmail(
+        emailFormData.email.trim(),
+        {
+          redirectTo: `${window.location.origin}/auth/callback`
+        }
+      )
       
-      setSuccess("Password reset link sent to your email!");
-    } catch (err) {
-      setError("Failed to send reset password email");
+      if (error) throw error
+      
+      setSuccess("Password reset link sent! Please check your email.")
+    } catch (err: any) {
+      console.error("Reset password error:", err)
+      if (err.message.includes("not found")) {
+        setError("No account found with this email address")
+      } else {
+        setError("Failed to send reset link. Please try again.")
+      }
+    } finally {
+      setIsLoading(false)
     }
-  };
+  }
+
+  const handleSocialLogin = async (provider: 'google' | 'apple' | 'discord') => {
+    try {
+      setError("")
+      setIsLoading(true)
+
+      // First get the provider's email without signing in
+      const { data: { provider_token, provider_refresh_token }, error: providerError } = 
+        await supabase.auth.signInWithOAuth({
+          provider,
+          options: {
+            skipBrowserRedirect: true, // Don't redirect yet
+            queryParams: provider === 'google' ? {
+              access_type: 'offline',
+              prompt: 'consent',
+            } : undefined,
+          }
+        })
+
+      if (providerError) throw providerError
+
+      // Get user info from Google to check email
+      const response = await fetch('https://www.googleapis.com/oauth2/v1/userinfo', {
+        headers: {
+          Authorization: `Bearer ${provider_token}`
+        }
+      })
+      const userData = await response.json()
+      const email = userData.email
+
+      // Check if email is linked to a wallet account
+      const { data: profileData } = await supabase
+        .from('profiles')
+        .select('wallet_address')
+        .eq('email', email)
+        .single()
+
+      if (profileData?.wallet_address) {
+        setError(
+          "This email is linked to a wallet account. Please use the 'Wallet' tab to sign in."
+        )
+        return
+      }
+
+      // If email is not linked to a wallet, proceed with social login
+      const { error: signInError } = await supabase.auth.signInWithOAuth({
+        provider,
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback`,
+          queryParams: provider === 'google' ? {
+            access_type: 'offline',
+            prompt: 'consent',
+          } : undefined,
+        }
+      })
+
+      if (signInError) throw signInError
+
+    } catch (err: any) {
+      console.error(`${provider} login error:`, err)
+      setError(`Failed to sign in with ${provider}. Please try again.`)
+    } finally {
+      setIsLoading(false)
+    }
+  }
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -294,63 +412,113 @@ export default function LoginPage() {
                 </Button>
               </div>
 
-              {/* Email Login */}
+              {/* Email Tab Content */}
               {activeTab === "email" && (
-                <form onSubmit={handleEmailLogin} className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="email">Email</Label>
-                    <Input 
-                      id="email" 
-                      name="email"
-                      type="email" 
-                      placeholder="john.doe@example.com" 
-                      value={emailFormData.email}
-                      onChange={handleEmailInputChange}
-                      required 
-                    />
+                <div className="space-y-4">
+                  {/* Social Login Buttons */}
+                  <div className="space-y-4">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="w-full bg-white hover:bg-gray-50 flex items-center justify-center h-10 text-black"
+                      onClick={() => handleSocialLogin('google')}
+                      disabled={isLoading}
+                    >
+                      <Image 
+                        src="https://supabase.com/dashboard/img/icons/google-icon.svg"
+                        alt="Google"
+                        width={20}
+                        height={20}
+                        className="mr-2"
+                      />
+                      Continue with Google
+                    </Button>
+
+                    <Button
+                      type="button"
+                      className="w-full bg-[#5865F2] hover:bg-[#4752C4] text-white flex items-center justify-center h-10"
+                      onClick={() => handleSocialLogin('discord')}
+                      disabled={isLoading}
+                    >
+                      <Image 
+                        src="https://supabase.com/dashboard/img/icons/discord-icon.svg"
+                        alt="Discord"
+                        width={20}
+                        height={20}
+                        className="mr-2 brightness-0 invert" // This combination will make the icon pure white
+                      />
+                      Continue with Discord
+                    </Button>
                   </div>
-                  
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <Label htmlFor="password">Password</Label>
-                      <Button 
-                        type="button" 
-                        variant="link" 
-                        onClick={handleResetPassword}
-                        className="text-sm"
-                      >
-                        Forgot Password?
-                      </Button>
+
+                  <div className="relative">
+                    <div className="absolute inset-0 flex items-center">
+                      <span className="w-full border-t border-gray-700" />
                     </div>
-                    <div className="relative">
+                    <div className="relative flex justify-center text-xs uppercase">
+                      <span className="bg-background px-2 text-muted-foreground">
+                        Or continue with email
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Email Login Form */}
+                  <form onSubmit={handleEmailLogin} className="space-y-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="email">Email</Label>
                       <Input 
-                        id="password" 
-                        name="password"
-                        type={showPassword ? "text" : "password"} 
-                        placeholder="••••••••" 
-                        value={emailFormData.password}
+                        id="email" 
+                        name="email"
+                        type="email" 
+                        placeholder="name@example.com" 
+                        value={emailFormData.email}
                         onChange={handleEmailInputChange}
                         required 
                       />
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="icon"
-                        className="absolute right-0 top-0 h-full px-3"
-                        onClick={() => setShowPassword(!showPassword)}
-                      >
-                        {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                      </Button>
                     </div>
-                  </div>
+                    
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <Label htmlFor="password">Password</Label>
+                        <Button 
+                          type="button" 
+                          variant="link" 
+                          onClick={handleResetPassword}
+                          className="text-sm"
+                        >
+                          Forgot Password?
+                        </Button>
+                      </div>
+                      <div className="relative">
+                        <Input 
+                          id="password" 
+                          name="password"
+                          type={showPassword ? "text" : "password"} 
+                          placeholder="••••••••" 
+                          value={emailFormData.password}
+                          onChange={handleEmailInputChange}
+                          required 
+                        />
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          className="absolute right-0 top-0 h-full px-3"
+                          onClick={() => setShowPassword(!showPassword)}
+                        >
+                          {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                        </Button>
+                      </div>
+                    </div>
 
-                  <Button type="submit" className="w-full" disabled={isLoading}>
-                    {isLoading ? "Signing In..." : "Sign In"}
-                  </Button>
-                </form>
+                    <Button type="submit" className="w-full" disabled={isLoading}>
+                      {isLoading ? "Signing In..." : "Sign in with Email"}
+                    </Button>
+                  </form>
+                </div>
               )}
 
-              {/* Wallet Login */}
+              {/* Wallet Tab Content */}
               {activeTab === "wallet" && (
                 <form onSubmit={handleWalletLogin} className="space-y-4">
                   <div className="space-y-2">

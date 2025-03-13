@@ -2,7 +2,7 @@
 
 import React, { useState } from "react"
 import Link from "next/link"
-import { Shield, Coins, Lock, BarChart3, Users, Mail, Car, Heart, Plane, Briefcase, Calendar, Home as HomeIcon, Menu } from "lucide-react"
+import { Shield, Coins, Lock, BarChart3, Users, Mail, Car, Heart, Plane, Briefcase, Calendar, Home as HomeIcon, Menu, ChevronDown, Sparkles, CreditCard, HelpCircle, LogIn, UserPlus, Image, Gamepad2, ArrowRight, Leaf } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
@@ -16,6 +16,14 @@ import {
   SheetContent,
   SheetTrigger,
 } from "@/components/ui/sheet"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  DropdownMenuSeparator,
+} from "@/components/ui/dropdown-menu"
+import { Separator } from "@/components/ui/separator"
 
 const insuranceCards = {
   popular: [
@@ -112,91 +120,322 @@ const insuranceCards = {
   ]
 };
 
+// Define the type for insurance card props
+interface InsuranceCardProps {
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+  features: string[];
+  type: string;
+}
+
 export default function Home() {
   const [selectedCategory, setSelectedCategory] = useState("popular");
 
   return (
     <div className="flex min-h-screen flex-col">
       <header className="sticky top-0 z-40 w-full border-b bg-background">
-        <div className="container flex h-16 items-center space-x-4 sm:justify-between sm:space-x-0 px-4">
-          <div className="flex gap-2 items-center text-xl font-bold">
+        <div className="container flex h-16 items-center justify-between px-4">
+          <Link href="/" className="flex gap-2 items-center text-xl font-bold">
             <Shield className="h-6 w-6" />
             <span>SafeSense</span>
-          </div>
-          <div className="hidden md:flex flex-1 items-center justify-end space-x-4">
-            <nav className="flex items-center space-x-1">
-              <Link href="/features" className="px-3 py-2 text-sm font-medium">
-                <TranslatedText text="Features" />
-              </Link>
-              <Link href="/insurance" className="px-3 py-2 text-sm font-medium">
-                <TranslatedText text="Insurance" />
-              </Link>
-              <Link href="#pricing" className="px-3 py-2 text-sm font-medium">
-                <TranslatedText text="Pricing" />
-              </Link>
-              <Link href="/faq" className="px-3 py-2 text-sm font-medium">
-                <TranslatedText text="FAQ" />
-              </Link>
-              <Link href="#contact" className="px-3 py-2 text-sm font-medium">
-                <TranslatedText text="Contact" />
-              </Link>
-              <LanguageSelector />
-              <ThemeToggle />
-              <div className="flex items-center gap-2">
-                <Link href="/auth/login">
-                  <Button variant="ghost">
-                    <TranslatedText text="Sign In" />
-                  </Button>
-                </Link>
-                <Link href="/auth/register">
-                  <Button>
-                    <TranslatedText text="Get Started" />
-                  </Button>
-                </Link>
-              </div>
-            </nav>
-          </div>
-          <div className="md:hidden flex items-center gap-2">
-            <Sheet>
-              <SheetTrigger>
-                <Button variant="ghost" size="icon">
-                  <Menu className="h-5 w-5" />
+          </Link>
+
+          {/* Desktop Navigation */}
+          <div className="hidden lg:flex items-center space-x-1">
+            {/* Products Dropdown */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="group">
+                  <span><TranslatedText text="Insurance" /></span>
+                  <ChevronDown className="ml-1 h-4 w-4 transition-transform group-data-[state=open]:rotate-180" />
                 </Button>
-              </SheetTrigger>
-              <SheetContent side="right" className="w-[300px]">
-                <nav className="flex flex-col space-y-4 mt-6">
-                  <Link href="/features" className="text-sm font-medium">
-                    <TranslatedText text="Features" />
-                  </Link>
-                  <Link href="/insurance" className="text-sm font-medium">
-                    <TranslatedText text="Insurance" />
-                  </Link>
-                  <Link href="#pricing" className="text-sm font-medium">
-                    <TranslatedText text="Pricing" />
-                  </Link>
-                  <Link href="/faq" className="text-sm font-medium">
-                    <TranslatedText text="FAQ" />
-                  </Link>
-                  <Link href="#contact" className="text-sm font-medium">
-                    <TranslatedText text="Contact" />
-                  </Link>
-                  <div className="pt-4 border-t">
-                    <Link href="/auth/login">
-                      <Button variant="outline" className="w-full">
-                        <TranslatedText text="Sign In" />
-                      </Button>
-                    </Link>
-                    <Link href="/auth/register" className="mt-2 block">
-                      <Button className="w-full">
-                        <TranslatedText text="Get Started" />
-                      </Button>
-                    </Link>
-                  </div>
-                </nav>
-              </SheetContent>
-            </Sheet>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-[280px]">
+                {/* Digital Assets */}
+                <DropdownMenuItem className="font-medium text-muted-foreground" disabled>
+                  Digital Assets
+                </DropdownMenuItem>
+                <Link href="/insurance/crypto">
+                  <DropdownMenuItem>
+                    <Shield className="mr-2 h-4 w-4" />
+                    <span>Crypto Insurance</span>
+                  </DropdownMenuItem>
+                </Link>
+                <Link href="/insurance/nft">
+                  <DropdownMenuItem>
+                    <Image className="mr-2 h-4 w-4" />
+                    <span>NFT Insurance</span>
+                  </DropdownMenuItem>
+                </Link>
+                <Link href="/insurance/defi">
+                  <DropdownMenuItem>
+                    <Lock className="mr-2 h-4 w-4" />
+                    <span>DeFi Protocol Insurance</span>
+                  </DropdownMenuItem>
+                </Link>
+                <Link href="/insurance/gaming">
+                  <DropdownMenuItem>
+                    <Gamepad2 className="mr-2 h-4 w-4" />
+                    <span>Gaming & Esports</span>
+                  </DropdownMenuItem>
+                </Link>
+
+                <DropdownMenuSeparator />
+
+                {/* Personal Insurance */}
+                <DropdownMenuItem className="font-medium text-muted-foreground" disabled>
+                  Personal Insurance
+                </DropdownMenuItem>
+                <Link href="/insurance/health">
+                  <DropdownMenuItem>
+                    <Heart className="mr-2 h-4 w-4" />
+                    <span>Health Insurance</span>
+                  </DropdownMenuItem>
+                </Link>
+                <Link href="/insurance/car">
+                  <DropdownMenuItem>
+                    <Car className="mr-2 h-4 w-4" />
+                    <span>Car Insurance</span>
+                  </DropdownMenuItem>
+                </Link>
+                <Link href="/insurance/home">
+                  <DropdownMenuItem>
+                    <HomeIcon className="mr-2 h-4 w-4" />
+                    <span>Home Insurance</span>
+                  </DropdownMenuItem>
+                </Link>
+                <Link href="/insurance/travel">
+                  <DropdownMenuItem>
+                    <Plane className="mr-2 h-4 w-4" />
+                    <span>Travel Insurance</span>
+                  </DropdownMenuItem>
+                </Link>
+
+                <DropdownMenuSeparator />
+
+                {/* Business Insurance */}
+                <DropdownMenuItem className="font-medium text-muted-foreground" disabled>
+                  Business Insurance
+                </DropdownMenuItem>
+                <Link href="/insurance/business">
+                  <DropdownMenuItem>
+                    <Briefcase className="mr-2 h-4 w-4" />
+                    <span>Business Insurance</span>
+                  </DropdownMenuItem>
+                </Link>
+                <Link href="/insurance/event">
+                  <DropdownMenuItem>
+                    <Calendar className="mr-2 h-4 w-4" />
+                    <span>Event Insurance</span>
+                  </DropdownMenuItem>
+                </Link>
+                <Link href="/insurance/agricultural">
+                  <DropdownMenuItem>
+                    <Leaf className="mr-2 h-4 w-4" />
+                    <span>Agricultural Insurance</span>
+                  </DropdownMenuItem>
+                </Link>
+
+                <DropdownMenuSeparator />
+                <Link href="/insurance">
+                  <DropdownMenuItem>
+                    <ArrowRight className="mr-2 h-4 w-4" />
+                    <span>View All Insurance</span>
+                  </DropdownMenuItem>
+                </Link>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            <Link href="/staking">
+              <Button variant="ghost">
+                <Coins className="mr-2 h-4 w-4" />
+                <span><TranslatedText text="Staking" /></span>
+              </Button>
+            </Link>
+
+            <Link href="/features">
+              <Button variant="ghost">
+                <Sparkles className="mr-2 h-4 w-4" />
+                <span><TranslatedText text="Features" /></span>
+              </Button>
+            </Link>
+
+            <Link href="#pricing">
+              <Button variant="ghost">
+                <CreditCard className="mr-2 h-4 w-4" />
+                <span><TranslatedText text="Pricing" /></span>
+              </Button>
+            </Link>
+
+            <Link href="/faq">
+              <Button variant="ghost">
+                <HelpCircle className="mr-2 h-4 w-4" />
+                <span><TranslatedText text="FAQ" /></span>
+              </Button>
+            </Link>
+          </div>
+
+          {/* Right Side Actions */}
+          <div className="flex items-center gap-2">
             <LanguageSelector />
             <ThemeToggle />
+            
+            {/* Desktop Auth Buttons */}
+            <div className="hidden lg:flex items-center gap-2">
+              <Link href="/auth/login">
+                <Button variant="ghost">
+                  <TranslatedText text="Sign In" />
+                </Button>
+              </Link>
+              <Link href="/auth/register">
+                <Button>
+                  <TranslatedText text="Get Started" />
+                </Button>
+              </Link>
+            </div>
+
+            {/* Mobile Navigation Trigger */}
+            <div className="lg:hidden">
+              <Sheet>
+                <SheetTrigger asChild>
+                  <Button variant="outline" size="icon" className="shrink-0">
+                    <Menu className="h-5 w-5" />
+                    <span className="sr-only">Open menu</span>
+                  </Button>
+                </SheetTrigger>
+                <SheetContent side="right" className="w-80 overflow-y-auto">
+                  <div className="flex flex-col gap-4 py-4">
+                    <Link
+                      href="/"
+                      className="flex items-center gap-2 px-2 py-1 text-lg font-semibold"
+                    >
+                      <Shield className="h-5 w-5" />
+                      <span>SafeSense</span>
+                    </Link>
+                    
+                    <div className="flex flex-col space-y-4">
+                      {/* Digital Assets Section */}
+                      <div className="px-2 py-1">
+                        <h2 className="mb-2 font-semibold text-muted-foreground">
+                          Digital Assets
+                        </h2>
+                        <div className="flex flex-col space-y-1">
+                          <Link href="/insurance/crypto" className="flex items-center gap-2 rounded-md px-2 py-1.5 text-sm hover:bg-muted">
+                            <Shield className="h-4 w-4" />
+                            <span>Crypto Insurance</span>
+                          </Link>
+                          <Link href="/insurance/nft" className="flex items-center gap-2 rounded-md px-2 py-1.5 text-sm hover:bg-muted">
+                            <Image className="h-4 w-4" />
+                            <span>NFT Insurance</span>
+                          </Link>
+                          <Link href="/insurance/defi" className="flex items-center gap-2 rounded-md px-2 py-1.5 text-sm hover:bg-muted">
+                            <Lock className="h-4 w-4" />
+                            <span>DeFi Protocol Insurance</span>
+                          </Link>
+                          <Link href="/insurance/gaming" className="flex items-center gap-2 rounded-md px-2 py-1.5 text-sm hover:bg-muted">
+                            <Gamepad2 className="h-4 w-4" />
+                            <span>Gaming & Esports</span>
+                          </Link>
+                        </div>
+                      </div>
+
+                      <Separator />
+
+                      {/* Personal Insurance Section */}
+                      <div className="px-2 py-1">
+                        <h2 className="mb-2 font-semibold text-muted-foreground">
+                          Personal Insurance
+                        </h2>
+                        <div className="flex flex-col space-y-1">
+                          <Link href="/insurance/health" className="flex items-center gap-2 rounded-md px-2 py-1.5 text-sm hover:bg-muted">
+                            <Heart className="h-4 w-4" />
+                            <span>Health Insurance</span>
+                          </Link>
+                          <Link href="/insurance/car" className="flex items-center gap-2 rounded-md px-2 py-1.5 text-sm hover:bg-muted">
+                            <Car className="h-4 w-4" />
+                            <span>Car Insurance</span>
+                          </Link>
+                          <Link href="/insurance/home" className="flex items-center gap-2 rounded-md px-2 py-1.5 text-sm hover:bg-muted">
+                            <HomeIcon className="h-4 w-4" />
+                            <span>Home Insurance</span>
+                          </Link>
+                          <Link href="/insurance/travel" className="flex items-center gap-2 rounded-md px-2 py-1.5 text-sm hover:bg-muted">
+                            <Plane className="h-4 w-4" />
+                            <span>Travel Insurance</span>
+                          </Link>
+                        </div>
+                      </div>
+
+                      <Separator />
+
+                      {/* Business Insurance Section */}
+                      <div className="px-2 py-1">
+                        <h2 className="mb-2 font-semibold text-muted-foreground">
+                          Business Insurance
+                        </h2>
+                        <div className="flex flex-col space-y-1">
+                          <Link href="/insurance/business" className="flex items-center gap-2 rounded-md px-2 py-1.5 text-sm hover:bg-muted">
+                            <Briefcase className="h-4 w-4" />
+                            <span>Business Insurance</span>
+                          </Link>
+                          <Link href="/insurance/event" className="flex items-center gap-2 rounded-md px-2 py-1.5 text-sm hover:bg-muted">
+                            <Calendar className="h-4 w-4" />
+                            <span>Event Insurance</span>
+                          </Link>
+                          <Link href="/insurance/agricultural" className="flex items-center gap-2 rounded-md px-2 py-1.5 text-sm hover:bg-muted">
+                            <Leaf className="h-4 w-4" />
+                            <span>Agricultural Insurance</span>
+                          </Link>
+                        </div>
+                      </div>
+
+                      <Separator />
+
+                      {/* Main Navigation Links */}
+                      <nav className="px-2 flex flex-col space-y-1">
+                        <Link href="/staking" className="flex items-center gap-2 rounded-md px-2 py-1.5 text-sm hover:bg-muted">
+                          <Coins className="h-4 w-4" />
+                          <span>Staking</span>
+                        </Link>
+                        <Link href="/features" className="flex items-center gap-2 rounded-md px-2 py-1.5 text-sm hover:bg-muted">
+                          <Sparkles className="h-4 w-4" />
+                          <span>Features</span>
+                        </Link>
+                        <Link href="#pricing" className="flex items-center gap-2 rounded-md px-2 py-1.5 text-sm hover:bg-muted">
+                          <CreditCard className="h-4 w-4" />
+                          <span>Pricing</span>
+                        </Link>
+                        <Link href="/faq" className="flex items-center gap-2 rounded-md px-2 py-1.5 text-sm hover:bg-muted">
+                          <HelpCircle className="h-4 w-4" />
+                          <span>FAQ</span>
+                        </Link>
+                      </nav>
+
+                      <Separator />
+
+                      {/* Auth Buttons */}
+                      <div className="px-2 py-1">
+                        <div className="flex flex-col gap-2">
+                          <Link href="/auth/login">
+                            <Button variant="outline" className="w-full justify-start">
+                              <LogIn className="mr-2 h-4 w-4" />
+                              <span>Sign In</span>
+                            </Button>
+                          </Link>
+                          <Link href="/auth/register">
+                            <Button className="w-full justify-start">
+                              <UserPlus className="mr-2 h-4 w-4" />
+                              <span>Get Started</span>
+                            </Button>
+                          </Link>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </SheetContent>
+              </Sheet>
+            </div>
           </div>
         </div>
       </header>
@@ -504,8 +743,10 @@ export default function Home() {
                   </ul>
                 </CardContent>
                 <CardFooter>
-                  <Link href="/contact-sales" className="w-full" variant="outline">
-                    <TranslatedText text="Contact Sales" />
+                  <Link href="/contact-sales" className="w-full">
+                    <Button variant="outline" className="w-full">
+                      <TranslatedText text="Contact Sales" />
+                    </Button>
                   </Link>
                 </CardFooter>
               </Card>
@@ -659,7 +900,7 @@ export default function Home() {
 }
 
 // Memoized InsuranceCard component to prevent unnecessary re-renders
-const InsuranceCard = React.memo(function InsuranceCard({ icon, title, description, features, type }) {
+const InsuranceCard = React.memo(function InsuranceCard({ icon, title, description, features, type }: InsuranceCardProps) {
   return (
     <Card className="flex flex-col h-full">
       <CardHeader>
@@ -669,7 +910,7 @@ const InsuranceCard = React.memo(function InsuranceCard({ icon, title, descripti
       </CardHeader>
       <CardContent className="flex-grow">
         <ul className="space-y-2 text-sm">
-          {features.map((feature, index) => (
+          {features.map((feature: string, index: number) => (
             <li key={index} className="flex items-start">
               <Shield className="mr-2 h-4 w-4 text-primary mt-0.5 shrink-0" />
               <TranslatedText text={feature} />

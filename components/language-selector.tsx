@@ -158,15 +158,17 @@ export function LanguageSelector() {
               <div className="px-3 py-2 text-sm text-muted-foreground">No languages found</div>
             ) : (
               filteredLanguages.map(({ code, lang, available }) => (
-                <button
+                <div
                   key={code}
                   onClick={() => handleLanguageChange(code)}
                   className={cn(
-                    "flex items-center w-full px-3 py-2 text-sm text-left hover:bg-muted",
+                    "flex items-center w-full px-3 py-2 text-sm text-left hover:bg-muted cursor-pointer",
                     language === code && "bg-muted",
                     !available && "opacity-60"
                   )}
-                  disabled={isLoading}
+                  role="button"
+                  tabIndex={0}
+                  aria-disabled={isLoading}
                 >
                   {lang.countryCode ? (
                     <span className={cn("flag", `flag-${lang.countryCode.toLowerCase()}`)} />
@@ -176,17 +178,19 @@ export function LanguageSelector() {
                   <span className="ml-2 flex-1 truncate">{lang.name}</span>
                   <span className="ml-1 text-xs text-muted-foreground truncate">({lang.nativeName})</span>
                   {language === code && <Check className="ml-2 h-4 w-4 flex-shrink-0" />}
-                </button>
+                </div>
               ))
             )}
             
             {!searchQuery && !showAll && (
-              <button
+              <div
                 onClick={() => setShowAll(true)}
-                className="flex items-center justify-center w-full px-3 py-2 text-sm text-primary hover:bg-muted border-t"
+                className="flex items-center justify-center w-full px-3 py-2 text-sm text-primary hover:bg-muted border-t cursor-pointer"
+                role="button"
+                tabIndex={0}
               >
                 Show all languages
-              </button>
+              </div>
             )}
           </div>
         </div>

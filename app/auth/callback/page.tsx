@@ -1,49 +1,51 @@
-'use client'
+"use client"
 
 import { useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 
-export default function AuthCallbackPage() {
+export default function AuthCallback() {
   const router = useRouter()
+  const searchParams = useSearchParams()
 
   useEffect(() => {
-    const handleEmailConfirmation = async () => {
+    const handleCallback = async () => {
       try {
-        // Get the token from the URL
-        const params = new URLSearchParams(window.location.hash.substring(1))
-        const accessToken = params.get('access_token')
-        const refreshToken = params.get('refresh_token')
+        const { data: { session }, error: sessionError } = await supabase.auth.getSession()
+        if (sessionError) throw sessionError
 
-        if (!accessToken) {
-          throw new Error('No access token found')
+        if (session?.user?.email) {
+          // Check if email is linked to a wallet account
+          const { data: profileData } = await supabase
+            .from('profiles')
+            .select('wallet_address')
+            .eq('email', session.user.email)
+            .single()
+
+          if (profileData?.wallet_address) {
+            router.push('/auth/login?error=wallet_account')
+            return
+          }
+
+          // If not a wallet account, proceed with normal flow
+          router.push('/dashboard')
+        } else {
+          router.push('/auth/login?error=session_not_found')
         }
-
-        // Set the session
-        const { data, error } = await supabase.auth.setSession({
-          access_token: accessToken,
-          refresh_token: refreshToken as string,
-        })
-
-        if (error) throw error
-
-        // Redirect to login page with success message
-        router.push('/auth/login?verified=true')
       } catch (error) {
-        console.error('Error during email confirmation:', error)
-        // Redirect to login page with error message
-        router.push('/auth/login?verified=false')
+        console.error('Callback error:', error)
+        router.push('/auth/login?error=callback_failed')
       }
     }
 
-    handleEmailConfirmation()
+    handleCallback()
   }, [router])
 
   return (
     <div className="flex min-h-screen items-center justify-center">
       <div className="text-center">
-        <h1 className="text-2xl font-bold mb-4">Verifying your email...</h1>
-        <p className="text-muted-foreground">Please wait while we confirm your email address.</p>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+        <p className="text-muted-foreground">Completing sign in...</p>
       </div>
     </div>
   )

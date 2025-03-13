@@ -6,6 +6,7 @@ import { ThemeProvider } from '@/components/theme-provider'
 import { LanguageProvider } from "@/components/language-provider"
 import { LoadingOverlay } from "@/components/loading-overlay"
 import { AuthProvider } from '@/contexts/AuthContext'
+import { ChatSupport } from "@/components/ui/chat-support"
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -15,6 +16,9 @@ export const metadata: Metadata = {
   icons: {
     icon: '/favicon.png',
   },
+  metadataBase: new URL('https://safe-sense.vercel.app'),
+  viewport: 'width=device-width, initial-scale=1.0',
+  robots: 'index, follow',
   openGraph: {
     type: 'website',
     url: 'safe-sense.vercel.ap', // Update with your actual domain
@@ -45,11 +49,6 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="canonical" href="safe-sense.vercel.app" /> {/* Update with your actual domain */}
-        <meta name="robots" content="index, follow" />
-      </head>
       <body className={inter.className}>
         <ThemeProvider
           attribute="class"
@@ -61,6 +60,7 @@ export default function RootLayout({
             <AuthProvider>
               <LoadingOverlay />
               {children}
+              <ChatSupport />
             </AuthProvider>
           </LanguageProvider>
         </ThemeProvider>

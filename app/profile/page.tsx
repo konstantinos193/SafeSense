@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation'
 import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
 import Link from 'next/link'
-import { Shield, Edit, Save, Camera, Check, AlertTriangle, Upload } from 'lucide-react'
+import { Shield, Edit, Save, Camera, Check, AlertTriangle, Upload, Eye, EyeOff } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -14,6 +14,24 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+
+// Define user profile interface
+interface UserProfile {
+  id: string;
+  first_name?: string;
+  last_name?: string;
+  email?: string;
+  phone?: string;
+  wallet_address?: string;
+  avatar_url?: string;
+  displayName?: string;
+  emailVerified?: boolean;
+  createdAt?: string;
+  registrationType: 'wallet' | 'email';
+  kycVerified?: boolean;
+  kycStatus?: string;
+  [key: string]: any; // For any other properties
+}
 
 // Helper function to get initials from name
 const getInitials = (firstName?: string, lastName?: string): string => {
@@ -27,7 +45,7 @@ export default function ProfilePage() {
   const [error, setError] = useState("")
   const [success, setSuccess] = useState("")
   const [isEditing, setIsEditing] = useState(false)
-  const [user, setUser] = useState(null)
+  const [user, setUser] = useState<UserProfile | null>(null)
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -94,9 +112,10 @@ export default function ProfilePage() {
           email: profile.email || "",
           phone: profile.phone || "",
         })
-      } catch (err) {
+      } catch (err: unknown) {
         console.error('Profile fetch error:', err)
-        setError(err.message || "An error occurred while fetching your profile")
+        const errorMessage = err instanceof Error ? err.message : "An error occurred while fetching your profile"
+        setError(errorMessage)
         router.push("/auth/login")
       } finally {
         setIsLoading(false)
@@ -125,13 +144,14 @@ export default function ProfilePage() {
       const { error } = await supabase.auth.signOut()
       if (error) throw error
       router.push("/auth/login")
-    } catch (err) {
+    } catch (err: unknown) {
       console.error('Sign out error:', err)
-      setError(err.message)
+      const errorMessage = err instanceof Error ? err.message : "An error occurred during sign out"
+      setError(errorMessage)
     }
   }
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
     setFormData(prev => ({
       ...prev,
@@ -142,6 +162,26 @@ export default function ProfilePage() {
   const handleSaveProfile = async () => {
     try {
       setIsLoading(true)
+      setError("")
+      
+      if (!user?.id) {
+        throw new Error("User ID not found")
+      }
+
+      // Get current session to ensure we have the latest user data
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession()
+      if (sessionError) throw sessionError
+      if (!session) throw new Error("No session found")
+
+      // First update auth email if it changed
+      if (formData.email !== user.email) {
+        const { error: emailUpdateError } = await supabase.auth.updateUser({
+          email: formData.email
+        })
+        if (emailUpdateError) throw emailUpdateError
+      }
+
+      // Update profile in database
       const { error: updateError } = await supabase
         .from('profiles')
         .update({
@@ -155,17 +195,40 @@ export default function ProfilePage() {
 
       if (updateError) throw updateError
 
-      setUser(prev => ({
-        ...prev,
-        first_name: formData.firstName,
-        last_name: formData.lastName,
-        email: formData.email,
-        phone: formData.phone
-      }))
+      // Fetch the updated profile to ensure we have the latest data
+      const { data: updatedProfile, error: profileError } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', user.id)
+        .single()
+
+      if (profileError) throw profileError
+
+      // Update local state with the fresh data
+      if (updatedProfile) {
+        setUser({
+          ...user,
+          first_name: updatedProfile.first_name,
+          last_name: updatedProfile.last_name,
+          email: updatedProfile.email,
+          phone: updatedProfile.phone
+        })
+        
+        // Update form data to match the new values
+        setFormData({
+          firstName: updatedProfile.first_name || "",
+          lastName: updatedProfile.last_name || "",
+          email: updatedProfile.email || "",
+          phone: updatedProfile.phone || "",
+        })
+      }
 
       setSuccess("Profile updated successfully")
       setIsEditing(false)
-    } catch (err) {
+      
+      // Refresh the page to ensure all data is in sync
+      router.refresh()
+    } catch (err: any) {
       console.error('Profile update error:', err)
       setError(err.message || "Failed to update profile")
     } finally {
@@ -173,10 +236,10 @@ export default function ProfilePage() {
     }
   }
 
-  const handleProfilePictureUpload = async (e) => {
+  const handleProfilePictureUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     try {
       const file = e.target.files?.[0]
-      if (!file) return
+      if (!file || !user?.id) return
 
       setIsLoading(true)
       
@@ -212,13 +275,15 @@ export default function ProfilePage() {
       if (updateError) throw updateError
 
       // Update local state with the new URL
-      setUser(prevUser => ({
-        ...prevUser,
-        avatar_url: `${publicUrl}?${Date.now()}`  // Add timestamp to force refresh
-      }))
+      if (user) {
+        setUser({
+          ...user,
+          avatar_url: `${publicUrl}?${Date.now()}`  // Add timestamp to force refresh
+        })
+      }
       
       setSuccess("Profile picture updated successfully")
-    } catch (err) {
+    } catch (err: any) {
       console.error('Profile picture upload error:', err)
       setError("Failed to upload profile picture")
     } finally {
@@ -277,14 +342,15 @@ export default function ProfilePage() {
         </div>
       </header>
 
-      <main className="flex-1 py-8 md:py-16 lg:py-20">
-        <div className="container px-4">
+      <main className="flex-1 py-12 md:py-16 lg:py-20">
+        <div className="container px-4 md:px-6">
           <div className="mx-auto max-w-4xl space-y-8">
             <div className="space-y-2">
-              <h1 className="text-2xl md:text-3xl font-bold">My Profile</h1>
-              <p className="text-sm md:text-base text-muted-foreground">Manage your account information and settings</p>
+              <h1 className="text-3xl font-bold">My Profile</h1>
+              <p className="text-muted-foreground">Manage your account information and settings</p>
             </div>
 
+            {/* Alerts */}
             {error && (
               <Alert variant="destructive">
                 <AlertTriangle className="h-4 w-4" />
@@ -301,8 +367,9 @@ export default function ProfilePage() {
               </Alert>
             )}
 
-            <div className="grid grid-cols-1 gap-8">
-              <div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {/* Profile Card - Left Column */}
+              <div className="md:col-span-1">
                 <Card>
                   <CardContent className="pt-6">
                     <div className="flex flex-col items-center space-y-4">
@@ -369,7 +436,7 @@ export default function ProfilePage() {
                           </div>
                           <div className="flex justify-between items-center">
                             <span className="text-sm text-muted-foreground">KYC Status</span>
-                            <Badge variant={user?.kycVerified ? "success" : "outline"}>
+                            <Badge variant={user?.kycVerified ? "default" : "outline"}>
                               {user?.kycVerified ? "Verified" : "Not Verified"}
                             </Badge>
                           </div>
@@ -380,250 +447,279 @@ export default function ProfilePage() {
                 </Card>
               </div>
 
-              <div>
-                <div className="w-full">
-                  <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2 mb-6">
-                    <Button 
-                      variant={activeTab === "profile" ? "default" : "outline"}
-                      className="w-full md:flex-1"
-                      onClick={() => setActiveTab("profile")}
-                    >
-                      Profile
-                    </Button>
-                    <Button 
-                      variant={activeTab === "kyc" ? "default" : "outline"}
-                      className="w-full md:flex-1"
-                      onClick={() => setActiveTab("kyc")}
-                    >
-                      KYC
-                    </Button>
-                  </div>
-
-                  {/* Profile Information Content */}
-                  {activeTab === "profile" && (
-                    <div className="space-y-4">
-                      <div className="flex justify-between items-center">
-                        <div>
-                          <h2 className="text-lg font-semibold">Profile Information</h2>
-                          <p className="text-sm text-muted-foreground">Update your personal details</p>
-                        </div>
-                        <Button variant="outline" size="icon" onClick={() => setIsEditing(!isEditing)}>
-                          {isEditing ? <Save className="h-4 w-4" /> : <Edit className="h-4 w-4" />}
+              {/* Main Content - Right Column */}
+              <div className="md:col-span-2">
+                <Card>
+                  <CardHeader className="border-b">
+                    <div className="flex flex-col gap-2">
+                      <div className="flex items-center gap-4">
+                        <Button
+                          variant={activeTab === "profile" ? "default" : "ghost"}
+                          className="relative h-9"
+                          onClick={() => setActiveTab("profile")}
+                        >
+                          Profile Information
+                          {activeTab === "profile" && (
+                            <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary" />
+                          )}
+                        </Button>
+                        <Button
+                          variant={activeTab === "kyc" ? "default" : "ghost"}
+                          className="relative h-9"
+                          onClick={() => setActiveTab("kyc")}
+                        >
+                          KYC Verification
+                          {activeTab === "kyc" && (
+                            <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary" />
+                          )}
                         </Button>
                       </div>
+                      <p className="text-sm text-muted-foreground">
+                        {activeTab === "profile" 
+                          ? "Manage your personal information and contact details"
+                          : "Complete your identity verification to unlock all features"
+                        }
+                      </p>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="pt-6">
+                    {activeTab === "profile" ? (
+                      <div className="space-y-6">
+                        {/* Basic Information Card */}
+                        <Card>
+                          <CardHeader>
+                            <div className="flex justify-between items-center">
+                              <div>
+                                <CardTitle>Basic Information</CardTitle>
+                                <CardDescription>Your personal details</CardDescription>
+                              </div>
+                              <Button variant="outline" size="icon" onClick={() => setIsEditing(!isEditing)}>
+                                {isEditing ? <Save className="h-4 w-4" /> : <Edit className="h-4 w-4" />}
+                              </Button>
+                            </div>
+                          </CardHeader>
+                          <CardContent className="space-y-4">
+                            {user?.registrationType === 'wallet' && (
+                              <div className="space-y-2">
+                                <Label>Wallet Address</Label>
+                                <div className="rounded-md border p-3 font-mono text-sm break-all bg-muted">
+                                  {user?.walletAddress}
+                                </div>
+                              </div>
+                            )}
+                            
+                            <div className="space-y-2">
+                              <Label htmlFor="firstName">First Name</Label>
+                              {isEditing ? (
+                                <Input
+                                  id="firstName"
+                                  name="firstName"
+                                  value={formData.firstName}
+                                  onChange={handleInputChange}
+                                  placeholder="Enter first name"
+                                />
+                              ) : (
+                                <div className="rounded-md border p-3">
+                                  {user?.first_name || 'Not set'}
+                                </div>
+                              )}
+                            </div>
 
-                      <div className="space-y-4">
-                        {user?.registrationType === 'wallet' && (
-                          <div className="space-y-2">
-                            <Label>Wallet Address</Label>
-                            <div className="rounded-md border p-2 font-mono text-sm break-all bg-muted">
-                              {user?.walletAddress}
+                            <div className="space-y-2">
+                              <Label htmlFor="lastName">Last Name</Label>
+                              {isEditing ? (
+                                <Input
+                                  id="lastName"
+                                  name="lastName"
+                                  value={formData.lastName}
+                                  onChange={handleInputChange}
+                                  placeholder="Enter last name"
+                                />
+                              ) : (
+                                <div className="rounded-md border p-3">
+                                  {user?.last_name || 'Not set'}
+                                </div>
+                              )}
+                            </div>
+
+                            <div className="space-y-2">
+                              <Label htmlFor="phone">Phone Number</Label>
+                              {isEditing ? (
+                                <Input 
+                                  id="phone" 
+                                  name="phone" 
+                                  value={formData.phone} 
+                                  onChange={handleInputChange}
+                                  placeholder="Enter phone number"
+                                />
+                              ) : (
+                                <div className="rounded-md border p-3">
+                                  {user?.phone || "Not provided"}
+                                </div>
+                              )}
+                            </div>
+
+                            {isEditing && (
+                              <div className="flex gap-2 justify-end pt-4">
+                                <Button variant="outline" onClick={() => setIsEditing(false)}>
+                                  Cancel
+                                </Button>
+                                <Button onClick={handleSaveProfile} disabled={isLoading}>
+                                  {isLoading ? "Saving..." : "Save Changes"}
+                                </Button>
+                              </div>
+                            )}
+                          </CardContent>
+                        </Card>
+
+                        {/* Contact Information Card */}
+                        <Card>
+                          <CardHeader>
+                            <CardTitle>Contact Information</CardTitle>
+                            <CardDescription>Your email and verification status</CardDescription>
+                          </CardHeader>
+                          <CardContent className="space-y-4">
+                            <div className="space-y-2">
+                              <Label htmlFor="email">Email Address</Label>
+                              <div className="flex items-center gap-2">
+                                {isEditing ? (
+                                  <Input
+                                    id="email"
+                                    name="email"
+                                    value={formData.email}
+                                    onChange={handleInputChange}
+                                    placeholder="Enter your contact email"
+                                    className="flex-1"
+                                  />
+                                ) : (
+                                  <div className="rounded-md border p-3 flex-1">
+                                    {user?.email || "No email set"}
+                                  </div>
+                                )}
+                                {user?.emailVerified && (
+                                  <Badge 
+                                    variant="secondary"
+                                    className="text-green-500 border-green-500"
+                                  >
+                                    <Check className="h-3 w-3 mr-1" /> Verified
+                                  </Badge>
+                                )}
+                              </div>
+                              {user?.registrationType === 'wallet' && (
+                                <p className="text-sm text-muted-foreground mt-2">
+                                  Add a contact email for notifications and updates
+                                </p>
+                              )}
+                            </div>
+                          </CardContent>
+                        </Card>
+                      </div>
+                    ) : (
+                      <div className="space-y-6">
+                        <div>
+                          <h2 className="text-lg font-semibold">KYC Verification</h2>
+                          <p className="text-sm text-muted-foreground">Verify your identity to unlock all features</p>
+                        </div>
+
+                        {user?.kycVerified ? (
+                          <div className="rounded-md bg-primary/20 p-4 flex items-center gap-3">
+                            <Check className="h-5 w-5 text-primary" />
+                            <div>
+                              <h3 className="font-medium">KYC Verification Complete</h3>
+                              <p className="text-sm text-muted-foreground">Your identity has been verified</p>
+                            </div>
+                          </div>
+                        ) : user?.kycStatus === "pending" ? (
+                          <div className="rounded-md bg-yellow-500/20 p-4 flex items-center gap-3">
+                            <AlertTriangle className="h-5 w-5 text-yellow-500" />
+                            <div>
+                              <h3 className="font-medium">Verification In Progress</h3>
+                              <p className="text-sm text-muted-foreground">We're reviewing your submitted documents</p>
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="space-y-6">
+                            <div className="rounded-md bg-muted p-4">
+                              <h3 className="font-medium mb-2">Why verify your identity?</h3>
+                              <ul className="space-y-2 text-sm text-muted-foreground">
+                                <li className="flex items-start gap-2">
+                                  <Check className="h-4 w-4 text-primary mt-0.5" />
+                                  <span>Access higher insurance coverage limits</span>
+                                </li>
+                                <li className="flex items-start gap-2">
+                                  <Check className="h-4 w-4 text-primary mt-0.5" />
+                                  <span>Faster claims processing and payouts</span>
+                                </li>
+                                <li className="flex items-start gap-2">
+                                  <Check className="h-4 w-4 text-primary mt-0.5" />
+                                  <span>Required for certain insurance types</span>
+                                </li>
+                              </ul>
+                            </div>
+
+                            <div className="space-y-4">
+                              <div className="space-y-2">
+                                <Label htmlFor="idType">ID Document Type</Label>
+                                <select
+                                  id="idType"
+                                  className="w-full h-10 rounded-md border border-input bg-background px-3 py-2"
+                                >
+                                  <option value="">Select ID type</option>
+                                  <option value="passport">Passport</option>
+                                  <option value="driverLicense">Driver's License</option>
+                                  <option value="nationalId">National ID Card</option>
+                                </select>
+                              </div>
+
+                              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div className="space-y-2">
+                                  <Label>Front of ID</Label>
+                                  <div className="border-2 border-dashed rounded-md p-6 flex flex-col items-center justify-center">
+                                    <Upload className="h-8 w-8 text-muted-foreground mb-2" />
+                                    <p className="text-sm text-muted-foreground text-center">
+                                      Drag & drop or click to upload
+                                    </p>
+                                  </div>
+                                </div>
+
+                                <div className="space-y-2">
+                                  <Label>Back of ID</Label>
+                                  <div className="border-2 border-dashed rounded-md p-6 flex flex-col items-center justify-center">
+                                    <Upload className="h-8 w-8 text-muted-foreground mb-2" />
+                                    <p className="text-sm text-muted-foreground text-center">
+                                      Drag & drop or click to upload
+                                    </p>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div className="space-y-2">
+                                <Label>Selfie with ID</Label>
+                                <div className="border-2 border-dashed rounded-md p-6 flex flex-col items-center justify-center">
+                                  <Upload className="h-8 w-8 text-muted-foreground mb-2" />
+                                  <p className="text-sm text-muted-foreground text-center">
+                                    Take a photo of yourself holding your ID
+                                  </p>
+                                </div>
+                              </div>
                             </div>
                           </div>
                         )}
-                        
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          <div className="space-y-2">
-                            <Label htmlFor="firstName">First Name</Label>
-                            {isEditing ? (
-                              <Input
-                                id="firstName"
-                                name="firstName"
-                                value={formData.firstName}
-                                onChange={handleInputChange}
-                                placeholder="Enter first name"
-                              />
-                            ) : (
-                              <div className="rounded-md border p-2">
-                                {user?.first_name || 'Not set'}
-                              </div>
-                            )}
-                          </div>
-                          <div className="space-y-2">
-                            <Label htmlFor="lastName">Last Name</Label>
-                            {isEditing ? (
-                              <Input
-                                id="lastName"
-                                name="lastName"
-                                value={formData.lastName}
-                                onChange={handleInputChange}
-                                placeholder="Enter last name"
-                              />
-                            ) : (
-                              <div className="rounded-md border p-2">
-                                {user?.last_name || 'Not set'}
-                              </div>
-                            )}
-                          </div>
-                        </div>
 
-                        <div className="space-y-2">
-                          <Label htmlFor="email">Contact Email</Label>
-                          <div className="flex items-center gap-2">
-                            {isEditing ? (
-                              <Input
-                                id="email"
-                                name="email"
-                                value={formData.email}
-                                onChange={handleInputChange}
-                                placeholder="Enter your contact email"
-                                className="flex-1"
-                              />
-                            ) : (
-                              <div className="rounded-md border p-2 flex-1">
-                                {user?.email || "No email set"}
-                              </div>
-                            )}
-                            {user?.emailVerified && (
-                              <Badge variant="outline" className="text-green-500 border-green-500">
-                                <Check className="h-3 w-3 mr-1" /> Verified
-                              </Badge>
-                            )}
-                          </div>
-                          {user?.registrationType === 'wallet' && (
-                            <p className="text-sm text-muted-foreground">
-                              Add a contact email for notifications and updates
-                            </p>
-                          )}
-                        </div>
-
-                        <div className="space-y-2">
-                          <Label htmlFor="phone">Phone Number</Label>
-                          {isEditing ? (
-                            <Input 
-                              id="phone" 
-                              name="phone" 
-                              value={formData.phone} 
-                              onChange={handleInputChange}
-                              placeholder="Enter phone number"
-                            />
-                          ) : (
-                            <div className="rounded-md border p-2">
-                              {user?.phone || "Not provided"}
-                            </div>
-                          )}
-                        </div>
-                      </div>
-
-                      {isEditing && (
-                        <div className="flex gap-2 justify-end mt-6">
-                          <Button variant="outline" onClick={() => setIsEditing(false)}>
-                            Cancel
+                        {!user?.kycVerified && user?.kycStatus !== "pending" && (
+                          <Button
+                            className="w-full"
+                            onClick={() => {
+                              setSuccess("KYC documents submitted successfully. We'll review them shortly.")
+                            }}
+                          >
+                            Submit Documents
                           </Button>
-                          <Button onClick={handleSaveProfile} disabled={isLoading}>
-                            {isLoading ? "Saving..." : "Save Changes"}
-                          </Button>
-                        </div>
-                      )}
-                    </div>
-                  )}
-
-                  {/* KYC Verification Content */}
-                  {activeTab === "kyc" && (
-                    <div className="space-y-6">
-                      <div>
-                        <h2 className="text-lg font-semibold">KYC Verification</h2>
-                        <p className="text-sm text-muted-foreground">Verify your identity to unlock all features</p>
+                        )}
                       </div>
-
-                      {user?.kycVerified ? (
-                        <div className="rounded-md bg-primary/20 p-4 flex items-center gap-3">
-                          <Check className="h-5 w-5 text-primary" />
-                          <div>
-                            <h3 className="font-medium">KYC Verification Complete</h3>
-                            <p className="text-sm text-muted-foreground">Your identity has been verified</p>
-                          </div>
-                        </div>
-                      ) : user?.kycStatus === "pending" ? (
-                        <div className="rounded-md bg-yellow-500/20 p-4 flex items-center gap-3">
-                          <AlertTriangle className="h-5 w-5 text-yellow-500" />
-                          <div>
-                            <h3 className="font-medium">Verification In Progress</h3>
-                            <p className="text-sm text-muted-foreground">We're reviewing your submitted documents</p>
-                          </div>
-                        </div>
-                      ) : (
-                        <div className="space-y-6">
-                          <div className="rounded-md bg-muted p-4">
-                            <h3 className="font-medium mb-2">Why verify your identity?</h3>
-                            <ul className="space-y-2 text-sm text-muted-foreground">
-                              <li className="flex items-start gap-2">
-                                <Check className="h-4 w-4 text-primary mt-0.5" />
-                                <span>Access higher insurance coverage limits</span>
-                              </li>
-                              <li className="flex items-start gap-2">
-                                <Check className="h-4 w-4 text-primary mt-0.5" />
-                                <span>Faster claims processing and payouts</span>
-                              </li>
-                              <li className="flex items-start gap-2">
-                                <Check className="h-4 w-4 text-primary mt-0.5" />
-                                <span>Required for certain insurance types</span>
-                              </li>
-                            </ul>
-                          </div>
-
-                          <div className="space-y-4">
-                            <div className="space-y-2">
-                              <Label htmlFor="idType">ID Document Type</Label>
-                              <select
-                                id="idType"
-                                className="w-full h-10 rounded-md border border-input bg-background px-3 py-2"
-                              >
-                                <option value="">Select ID type</option>
-                                <option value="passport">Passport</option>
-                                <option value="driverLicense">Driver's License</option>
-                                <option value="nationalId">National ID Card</option>
-                              </select>
-                            </div>
-
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                              <div className="space-y-2">
-                                <Label>Front of ID</Label>
-                                <div className="border-2 border-dashed rounded-md p-6 flex flex-col items-center justify-center">
-                                  <Upload className="h-8 w-8 text-muted-foreground mb-2" />
-                                  <p className="text-sm text-muted-foreground text-center">
-                                    Drag & drop or click to upload
-                                  </p>
-                                </div>
-                              </div>
-
-                              <div className="space-y-2">
-                                <Label>Back of ID</Label>
-                                <div className="border-2 border-dashed rounded-md p-6 flex flex-col items-center justify-center">
-                                  <Upload className="h-8 w-8 text-muted-foreground mb-2" />
-                                  <p className="text-sm text-muted-foreground text-center">
-                                    Drag & drop or click to upload
-                                  </p>
-                                </div>
-                              </div>
-                            </div>
-
-                            <div className="space-y-2">
-                              <Label>Selfie with ID</Label>
-                              <div className="border-2 border-dashed rounded-md p-6 flex flex-col items-center justify-center">
-                                <Upload className="h-8 w-8 text-muted-foreground mb-2" />
-                                <p className="text-sm text-muted-foreground text-center">
-                                  Take a photo of yourself holding your ID
-                                </p>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      )}
-
-                      {!user?.kycVerified && user?.kycStatus !== "pending" && (
-                        <Button
-                          className="w-full"
-                          onClick={() => {
-                            setSuccess("KYC documents submitted successfully. We'll review them shortly.")
-                          }}
-                        >
-                          Submit Documents
-                        </Button>
-                      )}
-                    </div>
-                  )}
-                </div>
+                    )}
+                  </CardContent>
+                </Card>
               </div>
             </div>
           </div>
